@@ -1,0 +1,30 @@
+<!doctype html> 
+<html class="no-js" lang="pt">
+<head>
+    <meta charset="utf-8">
+
+    <title></title>
+
+    <!-- CSS : implied media="all" -->
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+    <h1 data-binder="Header">Header 1</h1>
+
+    <ul data-binder="name: List, type: context">
+        <li data-binder="group: test" data-binder-tmpl>TESTE <a href="#">LINK</a></li>
+        <li data-binder="group: test" data-binder-tmpl="teste">TESTE</li>
+    </ul>
+
+    <script src="../lib/augment.min.js"></script>
+    <script src="../binder.js"></script>
+    <script src="index.js"></script>
+
+    <script type="text/javascript">        
+        app = new Binder( document.body );
+        Binder.APP_LANG = 'pt';
+    </script>
+
+</body>
+</html>
