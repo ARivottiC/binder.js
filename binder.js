@@ -1,20 +1,21 @@
-/* jshint laxcomma: true */
 ;(function ( window ) {
+    /* jshint laxcomma: true */
     "use strict";
 
     var 
         /* 
          *  Aliases 
          */
-        aP      = Array.prototype
-      , each    = aP.forEach
-      , filter  = aP.filter
-      , indexOf = aP.indexOf
-      , pop     = aP.pop
-      , push    = aP.push
-      , shift   = aP.shift
-      , slice   = aP.slice
-      , splice  = aP.splice
+        arrayProto = Array.prototype
+      , each       = arrayProto.forEach
+      , filter     = arrayProto.filter
+      , indexOf    = arrayProto.indexOf
+      , map        = arrayProto.map
+      , pop        = arrayProto.pop
+      , push       = arrayProto.push
+      , shift      = arrayProto.shift
+      , slice      = arrayProto.slice
+      , splice     = arrayProto.splice
          
         /* 
          *  Internal objects, variables 
@@ -35,9 +36,50 @@
       , rHidden    = /(?:^|\s+)hidden(?!\S)/
       ;
 
+    // 
+    function Dummy() {}
+
     /* 
      *  Functions 
      */
+
+    // get a Binder object by name
+    function object( name ) { return oObject[ name ]; }
+
+    // 
+    function define( name, ExtClass ) {
+        var impClasses = slice.call( arguments, 2 )
+          , length     = impClasses.length
+          , override   = ( impClasses.pop() || {} ) // TODO: avoind creating unecessary object
+          ; 
+    
+        /* jshint laxbreak:true, -W054 */
+        var Class = (
+            new Function(
+                "c",
+                'return function ' 
+                    + name 
+                    + '(e,p,a) { c.call(this,e,p,a) }'
+            )
+        )( override.constructor === Object ? ExtClass : override.constructor );
+
+        // yes i know, Object.create...
+        Dummy.prototype = ExtClass.prototype;
+
+        Class.prototype = new Dummy();
+
+        for ( var i = 0; i < length - 1; i++ ) {
+            var ImpClass = impClasses[ i ];
+            merge( Class.prototype, ImpClass.prototype );
+        }
+
+        merge( Class.prototype, override );
+
+        Class.prototype.constructor = Class;
+
+        /* jshint boss: true */
+        return ( oObject[ name ] = Class );
+    }
 
     // return the id(or name) attribute value from an element
     function getIdOrName( elem ) {
@@ -96,56 +138,20 @@
         return merged;
     }
 
-    // get an object by a class name. set the object if given
-    //  TODO: maybe object is not a good name
-    function object( name, ExtClass ) {
-        if ( isUndef( name ) )
-            return void 0;
-
-        if ( ExtClass ) {
-            var impClasses = slice.call( arguments, 2 )
-              , length     = impClasses.length
-              , override   = impClasses.pop()
-              ; 
-        
-            var Class = (
-                new Function(
-                    "c",
-                    'return function ' 
-                        + name 
-                        + '(e,p,a) { c.call(this,e,p,a) }'
-                )
-            )( override.constructor === Object ? ExtClass : override.constructor );
-
-            Class.prototype = Object.create( ExtClass.prototype );
-
-            for ( var i = 0; i < length - 1; i++ ) {
-                var ImpClass = impClasses[ i ];
-                merge( Class.prototype, ImpClass.prototype );
-            }
-
-            merge( Class.prototype, override );
-
-            Class.prototype.constructor = Class;
-
-            oObject[ name ] = Class;
-        }
-
-        return oObject[ name ];
-    }
-
     /* 
      * Object functions 
      */
 
-    //
+    // add a class to object's element.
+    //  requires a regexp to check for existence and the class to add
     function addClass( obj, regexp, val ) {
         var elem = obj.elem;
         if ( ! hasClass( obj, regexp ) )
             elem.className = elem.className.concat( ' ', val ).trim();
     }
 
-    // 
+    // push a child to an Array like object 
+    //  if an index is given, splice it to that position 
     function attach( obj, child, index ) {
         if ( isUndef( index ) )
             return push.call( obj, child );
@@ -155,7 +161,11 @@
         return child;
     }
 
+    // attach a child to a parent
+    //  of the object is an Prepender, set index to 0
+    //  if an index is given, attach it to that parent's position
     function attachChild( obj, child, index ) {
+        /* jshint laxbreak: true */
         var isAppender = ! obj.length      // empty, push allways work 
                       || isUndef( index )  // index is not defined 
                       || ! obj[ index ]    // or doesn'ts have that child
@@ -187,17 +197,17 @@
 
             // TODO: check if is an elemet. IE up to 8 considers comments as children... :S
 
-            if ( ! isNull( child.getAttribute( Binder.attr ) ) )
+            if ( ! isNull( child.getAttribute( Binder.defaultAttr ) ) )
                 obj.attach( child );
             else
                 attachChildren( obj, child );
         }
     }
 
-    // 
+    // associate a template to a object
     function attachTemplate( obj, elem, arg ) {
         var guid     = obj.guid
-          , tmplAttr = Binder.attr + '-tmpl'
+          , tmplAttr = Binder.defaultAttr + '-tmpl'
           , tmplName = elem.getAttribute( tmplAttr );
 
         if ( isNull( tmplName ) ) 
@@ -216,7 +226,7 @@
         return elem;
     }
 
-    // 
+    // dettach a child from an Array like object
     function dettach( obj, elem ) {
         if ( isUndef( elem ) )
             return pop.call( obj ); 
@@ -226,12 +236,15 @@
             return splice.call( obj, index, 1 ).pop();
     }
 
-    //
+    // check if object's element has a given class set
     function hasClass( obj, regexp ) {
         return regexp.test( obj.elem.className );
     }
 
-    //
+    function isHidden( obj ) { return obj.isHidden(); }
+    function isSelected( obj ) { return obj.isSelected(); }
+
+    // remove object's element class
     function remClass( obj, regexp ) {
         var elem = obj.elem;
         elem.className = elem.className.replace( regexp, '' ).trim();
@@ -250,7 +263,7 @@
         return true;
     }
 
-    //
+    // make the first position of a string uppercase
     function ucFirst( obj ) {
         return obj.replace( 
                 /^[a-z]/, function ( val ) { return val.toUpperCase(); }
@@ -262,33 +275,54 @@
      *  Array object intended to store a collection of Binder objects with
      *  methods that affects all children 
      */
-    function BinderCollection() { Array.prototype.push.apply( this, arguments ); }
-    var lP = BinderCollection.prototype = Object.create( Array.prototype );
+    function BinderCollection() { push.apply( this, arguments ); }
 
-    // array returning methods should allways return a BinderCollection 
-    ['filter','map', 'slice', 'splice'].forEach( function ( fn ) {
-        lP[ fn ] = function() {
-            var obj = new BinderCollection();
-            obj.push.apply( 
-                obj, Array.prototype[ fn ].apply( this, arguments ) 
-            );
-            return obj;
-        };
-    });
+    // yes i know, Object.create...
+    Dummy.prototype = Array.prototype;
 
-    // TODO: add is* methods
+    var binderColProto = BinderCollection.prototype = new Dummy()
+      , binderColSlice = binderColProto.slice
+      ;
 
-    // allow to execute binder methods in all childen
-    ['deselect', 'select', 'hide', 'on', 'show'].forEach( function ( fn ) {
-        lP[ fn ] = function() {
+    merge( binderColProto, {
+        // execute a given method in all children
+        exec: function ( fn, args ) {
             this.forEach( function ( child ) { 
-                child[ fn ].apply( child, arguments ); 
+                child[ fn ].apply( child, args ); 
             });
             return this;
-        };
-    });
-    lP.constructor = BinderCollection;
+        }
 
+        // returns a BinderCollection (see Array.filter)
+      , filter: function () {
+            return binderColSlice.apply( filter.apply( this, arguments ) );
+        }
+
+        // returns all hidden children
+      , isHidden: function () { return this.filter( isHidden ) }
+
+        // returns all selected children
+      , isSelected: function () { return this.filter( isSelected ) }
+
+        // returns a BinderCollection (see Array.map)
+      , map: function () {
+            return binderColSlice.apply( map.apply( this, arguments ) );
+        }
+
+        // returns a BinderCollection (see Array.slice)
+      , slice: function () {
+            var obj = new BinderCollection();
+            obj.push.apply( obj, slice.apply( this, arguments ) );
+            return obj;
+        }
+
+        // returns a BinderCollection (see Array.splice)
+      , splice: function () {
+            return binderColSlice.apply( splice.apply( this, arguments ) );
+        }
+    });
+
+    binderColProto.constructor = BinderCollection;
 
     /* 
      * Binder 
@@ -337,8 +371,8 @@
         attach  : function ( elem, arg ) {
             // Merge arg with attr configuration
             arg = merge( 
-                    { class: Binder.class } 
-                  , inflateVal( elem.getAttribute( Binder.attr ) ) 
+                    { class: Binder.defaultClass } 
+                  , inflateVal( elem.getAttribute( Binder.defaultAttr ) ) 
                   , arg
                 );
 
@@ -389,7 +423,7 @@
 
                     break;
                 default:
-                    var array = lP.slice.call( obj );
+                    var array = binderColProto.slice.call( obj );
  
                     if ( isFn( val ) )
                         return array.filter( val );
@@ -444,7 +478,7 @@
         }
 
       , deselect  : function () { remClass( this, rSelected ); }
-      , IsHidden  : function () { return hasClass( this, rHidden ); }
+      , isHidden  : function () { return hasClass( this, rHidden ); }
       , isSelected: function () { return hasClass( this, rSelected ); }
       , hide      : function () { addClass( this, rHidden, 'hidden' ); }
       , length    : 0
@@ -581,48 +615,54 @@
               , elem = obj.elem
               ;
 
-            if ( isNull( val ) )
-                while ( obj.length )
-                    obj.dettach();
+            if ( isUndef( val ) )
+                return elem.innerHTML;
 
-            if ( ! isUndef( val ) )
-                elem.innerHTML = val;
+            // Setting value will change innerHTML, destroy all children
+            while ( obj.length )
+                obj.dettach();
 
-            return ( val || elem.innerHTML );
+            /* jshint boss: true */
+            return ( elem.innerHTML = val );
         } 
     }
     , Binder.prototype.constructor = Binder
-    , Binder.VERSION = '3.0.0'
+    , Binder.VERSION = '3.0.1'
 
     /*
      * Static object functions
      */
-    , Binder.utils  = {
-        merge : merge
-      , object: object
-    }
+    , Binder.define = define 
+    , Binder.merge  = merge
+    , Binder.object = object
 
     /*
      * Attributes intended to be override 
      */
       // default attribute name
-    , Binder.attr = 'data-binder'
+    , Binder.defaultAttr = 'data-binder'
 
     // default class name
-    , Binder.class = 'Binder'
+    , Binder.defaultClass = 'Binder'
     ;
 
     window.Binder = Binder;
 })( window );
 
 ;(function ( Binder ) {
-    var u = Binder.utils;
+    /* jshint laxcomma: true */
+    "use strict";
 
-    u.object('Header', Binder, {
+    var object = Binder.object
+      , define = Binder.define
+      , merge  = Binder.merge
+      ;
+
+    define('Header', Binder, {
         constructor: function ( elem, parent, args ) {
             Binder.call( 
                 this, elem, parent, 
-                u.merge( { name: 'Header' }, args )
+                merge( { name: 'Header' }, args )
             );
 
             this.on('click');
