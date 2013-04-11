@@ -3,19 +3,30 @@
 <head>
     <meta charset="utf-8">
 
-    <title></title>
+    <title>Binder Examples</title>
 
     <!-- CSS : implied media="all" -->
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
+    <h1>Binder Examples</h1>
 
-    <h1 data-binder="Header">Header 1</h1>
+    <div>
+        <h2>Hello World</h2>
+        <a href="#" data-binder="AppButton">Click Me</a>    
+    </div>
 
-    <ul data-binder="name: List, type: context">
-        <li data-binder="group: test" data-binder-tmpl>TESTE <a href="#">LINK</a></li>
-        <li data-binder="group: test" data-binder-tmpl="teste">TESTE</li>
-    </ul>
+    <div>
+        <h2>List</h2>
+        <div data-binder="class: AppList">
+            <a href="#" data-binder="AppListAdd">Add Item</a>
+            <ul data-binder="AppListContainer">
+                <li data-binder="group: AppListItems" data-binder-tmpl>
+                    <a href="#" data-binder="AppListRem">Remove Item</a>
+                </li>
+            </ul>
+        </li>
+    </div>
 
     <script src="../lib/augment.min.js"></script>
     <script src="../binder.js"></script>
@@ -23,8 +34,6 @@
 
     <script type="text/javascript">        
         app = new Binder( document.body );
-        Binder.APP_LANG = 'pt';
     </script>
-
 </body>
 </html>

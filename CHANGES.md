@@ -1,3 +1,14 @@
+3.0.2
+    * Binder.merge removed
+    * on and no are now Class methods
+    * removed template logic from update method
+    * attach now considers a template name if an elem is not given
+    * BinderCollection.exec now handles arguments properly
+    * minor code improvements
+    * added binder.min.js and binder.base62.js
+    * added "Hello World" and "List" examples to docs/index.html
+    * more documentation
+
 3.0.1
     * Binder.utils.merge is now Binder.merge
     * BInder.utils.object was divided in two:

@@ -244,6 +244,41 @@
     function isHidden( obj ) { return obj.isHidden(); }
     function isSelected( obj ) { return obj.isSelected(); }
 
+    //
+    function no( obj, event, fn ) {
+        // TODO: check/remove listeners 
+        var elem = obj.elem;
+        elem.removeEventListener.apply( elem, arguments ); 
+    }
+
+    //
+    function on( obj, event, fn, capture ) {
+        // TODO: capture support?
+
+        // no function given, assume object's method with event name
+        fn = fn || obj[ event ];
+
+        // add a unique id to the function to be easyly indexed 
+        fn.guid = fn.guid || guid++;
+
+        // get listeners for this object ( set if first time )
+        var oL = oListener[ obj.guid ] || ( oListener[ obj.guid ] = {} );
+
+        // get listeners for this object + event ( set if first time )
+        var eL = oL[ event ] || ( oL[ event ] = {} );
+
+        // get the listener for this object + event + function ( set if first time )
+        var listener = eL[ fn.guid ] || ( 
+            eL[ fn.guid ] = function ( event ) {
+                return fn.call( obj, event );
+            } 
+        );
+
+        obj.elem.addEventListener( event, listener, capture ); 
+
+        return obj;
+    }
+
     // remove object's element class
     function remClass( obj, regexp ) {
         var elem = obj.elem;
@@ -286,7 +321,9 @@
 
     merge( binderColProto, {
         // execute a given method in all children
-        exec: function ( fn, args ) {
+        exec: function ( fn ) {
+            var args = splice.call( arguments, 1 );
+            console.log( args );
             this.forEach( function ( child ) { 
                 child[ fn ].apply( child, args ); 
             });
@@ -299,10 +336,10 @@
         }
 
         // returns all hidden children
-      , isHidden: function () { return this.filter( isHidden ) }
+      , isHidden: function () { return this.filter( isHidden ); }
 
         // returns all selected children
-      , isSelected: function () { return this.filter( isSelected ) }
+      , isSelected: function () { return this.filter( isSelected ); }
 
         // returns a BinderCollection (see Array.map)
       , map: function () {
@@ -369,6 +406,14 @@
     Binder.prototype = {
         // attach a child to the object 
         attach  : function ( elem, arg ) {
+            var obj = this;
+
+            // TODO: the ideia is to check if elem is a string or number,
+            //  check for a better way
+            if ( ! elem.nodeType ) {
+                elem = oTemplate[ obj.guid ][ elem ].cloneNode( true ); // TODO: re-evaluate template
+            }
+
             // Merge arg with attr configuration
             arg = merge( 
                     { class: Binder.defaultClass } 
@@ -377,7 +422,7 @@
                 );
 
             // if this is a template, attach it and exit
-            if ( attachTemplate( this, elem, arg ) )
+            if ( attachTemplate( obj, elem, arg ) )
                 return ;
 
             var Constructor = object( arg.class );
@@ -385,9 +430,9 @@
             if ( isUndef( Constructor ) )
                 throw "can't use " + arg.class + ", maybe you forgot to set it?";
 
-            var parent = this
-              , child  = new Constructor( elem, parent, arg )
-              , name   = child.name;
+            var child = new Constructor( elem, obj, arg )
+              , name  = child.name
+              ;
 
             if ( ! isA( child, Binder ) )
                 throw "not a Binder Object!";
@@ -397,7 +442,7 @@
             if ( ! isUndef( name )  )
                 child.context[ name ] = child;
 
-            attachChild( parent, child, arg.index );
+            attachChild( obj, child, arg.index );
 
             return child;
         }
@@ -494,38 +539,6 @@
 
             return false;
         }
-      , no        : function ( event, fn ) {
-            // TODO: check/remove listeners 
-            var elem = this.elem;
-            elem.removeEventListener.apply( elem, arguments ); 
-        }
-      , on        : function ( event, fn, capture ) {
-            var obj = this; // "This" can't be minified...
-            // TODO: capture support?
-
-            // no function given, assume object's method with event name
-            fn = fn || obj[ event ];
-
-            // add a unique id to the function to be easyly indexed 
-            fn.guid = fn.guid || guid++;
-
-            // get listeners for this object ( set if first time )
-            var oL = oListener[ obj.guid ] || ( oListener[ obj.guid ] = {} );
-
-            // get listeners for this object + event ( set if first time )
-            var eL = oL[ event ] || ( oL[ event ] = {} );
-
-            // get the listener for this object + event + function ( set if first time )
-            var listener = eL[ fn.guid ] || ( 
-                eL[ fn.guid ] = function ( event ) {
-                    return fn.call( obj, event );
-                } 
-            );
-
-            obj.elem.addEventListener( event, listener, capture ); 
-
-            return obj;
-        }
       , prev: function () {
             var parent = this.parent;
 
@@ -578,16 +591,10 @@
 
                     if ( has( obj, index ) && !( obj.isAppender || obj.isPrepender ) )
                         child = obj[ index ];
-                    else {
-                        // TODO: move to Appender object
-                        var template = value.template || 0
-                          , elem     = oTemplate[ obj.guid ][ template ].cloneNode( true ) // TODO: re-evaluate template
-                          ;
-
-                        delete value.template;
-
-                        child = obj.attach( elem );
-                    }
+                    else
+                        child = obj.attach( value.template || 0 );
+                    
+                    delete value.template;
 
                     child.update( value );
                 });
@@ -627,14 +634,15 @@
         } 
     }
     , Binder.prototype.constructor = Binder
-    , Binder.VERSION = '3.0.1'
+    , Binder.VERSION = '3.0.2'
 
     /*
      * Static object functions
      */
     , Binder.define = define 
-    , Binder.merge  = merge
+    , Binder.no     = no 
     , Binder.object = object
+    , Binder.on     = on 
 
     /*
      * Attributes intended to be override 
@@ -648,25 +656,3 @@
 
     window.Binder = Binder;
 })( window );
-
-;(function ( Binder ) {
-    /* jshint laxcomma: true */
-    "use strict";
-
-    var object = Binder.object
-      , define = Binder.define
-      , merge  = Binder.merge
-      ;
-
-    define('Header', Binder, {
-        constructor: function ( elem, parent, args ) {
-            Binder.call( 
-                this, elem, parent, 
-                merge( { name: 'Header' }, args )
-            );
-
-            this.on('click');
-        }
-      , click: function () { console.log( arguments ); }
-    });
-})( Binder );
