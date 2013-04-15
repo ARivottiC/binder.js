@@ -1,0 +1,40 @@
+<head>
+    <style>
+        ul          { list-style: none; }
+        li          { width: 200px; cursor: pointer;  }
+        li.selected { list-style: square; font-weight: bold }
+
+        [data-binder-tmpl] { display: none }
+    </style>
+</head>
+<body>
+    <h1 data-binder>TODO List</h1>
+
+    <ul>
+        <li data-binder="Item">Buy Milk</li>
+        <li data-binder="Item">Feed the chicken</li>
+        <li data-binder="Item">Clean the house</li>
+        <li data-binder="Item">Play piano</li>
+        <li data-binder="Item">Pet the kitten</li>
+    </ul>
+
+    <script src="binder.js"></script>
+
+    <script type="text/javascript">
+        (function ( Binder ) {
+            Binder.define('Item', Binder, {
+                constructor: function() {
+                    Binder.apply(this, arguments);
+                    Binder.on( this, 'click' );
+                },
+                click: function () {
+                    if (this.isSelected()) { this.deselect(); }
+                    else                   { this.select();   }
+                }
+            });
+        })( Binder );
+
+        app = new Binder( document.body );
+    </script>
+</body>
+
