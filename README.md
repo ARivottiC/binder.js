@@ -24,6 +24,17 @@ Requires
 * [augment.js](https://github.com/olivernn/augment.js][augment.js) (or any other that implements ECMAScript 5 specification)
 * [EventListener.js](https://github.com/jonathantneal/EventListener) (or any other that add the same functionality)
 
+### CSS ###
+
+You must set the following **CSS** in order to use **binder.js**:
+
+```css
+.selected { font-weight: bold }
+.hidden   { display: none }
+
+[data-binder-tmpl] { display: none }
+```
+
 Usage
 --------------------
 
@@ -53,46 +64,171 @@ Usage
 
 See more [Binder Examples](docs/index.html).
 
-Class Methods
+HTML Attributes
 --------------------
 
-### *define*(`name`, `extend`[, `implement`, ...], `override`) ###
+### *data-binder*[="`value`|`key`: `value`, ..."] ###
 
-TODO
+Attach the element as a `Binder` object.
 
-### *no*(`object`, `event`, `function`) ###
+* **`value`**
 
-TODO
+    When the value is a valid class, set **class**, else, set **name**. 
 
-### *object*(`name`) ###
+* **`key`: `value`, ...**
+    * **class**
 
-TODO
+        The object's class. Default is [`Binder.defaultClass`][defaultClass].
 
-### *on*(`object`, `event`, `function`) ###
+    * **group**
 
-TODO
+        The object group. See [*`group`* attribute][groupAttr]. Default is *undefined*. 
+
+    * **name**
+
+        The context's method name. See [*`context`* attribute][contextAttr]. Default is *none*.
+
+    * **type**
+        
+        Space separeted names. Each type will be transform in a is* attribute with value true.
+
+
+### *data-binder-tmpl*[="`name`"] ###
+
+Attach the element as a template. By default **`name`** is the attach order.
 
 Class Attributes
 --------------------
 
 ### *defaultAttr* ###
 
-TODO
+The HTML attribute name that identifies an element as a `Binder` object. Default is *data-binder*.
 
 ### *defaultClass* ###
 
-TODO
+The class name used when the *class* options is not defined. default is `Binder`.
+
+Class Methods
+--------------------
+
+### *define*(`name`, `extend`[, `implement`, ...], `override`) ###
+
+Defined a new `Binder` class.
+
+* **`name`**
+
+    A `String` with the class name.
+
+* **`extend`**
+
+    A `Binder` class to extend from.
+
+* **`implement`**
+
+    One or more `Binder` classes to implement.
+
+* **`override`**
+
+    An `Object` with custom functions for the new class. 
+
+
+### *no*(`object`, `event`, `function`) ###
+
+Add an event to object. 
+
+* **`object`**
+
+    A `Binder` object.
+
+* **`event`**
+
+    A `String` with the event name.
+
+* **`function`**
+
+    A `Function` to be executed on event trigger. If *undefined* will assume **`object`**[**`event`**].
+
+
+### *object*(`name`) ###
+
+Return a `Binder` class by `name`.
+
+* **`name`**
+    
+    A `String` with the class name.
+
+
+### *on*(`object`, `event`, `function`) ###
+
+Remove an event from object. 
+
+* **`object`**
+
+    A `Binder` object.
+
+* **`event`**
+
+    A `String` with the event name.
+
+* **`function`**
+
+    A `Function` to be removed. If *undefined* will assume **`object`**[**`event`**]. TODO: if *null*, clear all object events. 
+
+
+Object Attributes
+--------------------
+
+### *context* ###
+
+Returns the context object.
+
+### *elem* ###
+
+Returns the `HTML Element`.
+
+### *group* ###
+
+Returns a `BinderCollection` will all the objects of the same group.
+
+### *parent* ###
+
+Returns the parent object.
+
+### *root* ###
+
+Returns the root object. The root object is the first object binded.
 
 Object Methods
 --------------------
 
 ### *attach*(`elem`|`template`[, `args`]) ###
 
-TODO
+Attach a child to object.
 
-### *children*([`filter`]) ###
+* **'elem`**
+    
+    An `HTML Element` node. 
 
-TODO
+* **'template`**
+
+    A `String`, to identify the template's name or `Number` to identify the template's position to use.
+
+* **'args`**
+
+    An `Object` with configuration options.  
+
+
+### *children*([`function`|`index`]) ###
+
+Returns a `BinderCollection` with all th object's children.
+
+* **`filter`**
+
+    TODO
+
+* **`index`**
+
+    TODO
 
 ### *destructor*() ###
 
@@ -146,14 +282,20 @@ TODO
 
 TODO
 
+BinderCollection
+--------------------
+
+
 Road map 
 --------------------
 
 * Documentation and examples
+* Re-evaluate group attribute as method 
 * Re-evaluate isAppender, isPrepender and isUpdater logic
 * Proper implementation of Binder.no
 * Improve template manipulation
 * Improve error handling
+* Add clone logic
 
 Acknowledges
 --------------------
@@ -169,4 +311,11 @@ The following people were involved in the implementation of **JsBinder** and con
 * [ricardoanjinho](https://github.com/ricardoanjinho)
 * [whity](https://github.com/whity)
 
-[binder.min.js](binder.min.js) and [binder.base62.min](binder.base62.min) were made using [Dean Eduards Packer](http://dean.edwards.name/packer/).
+The [Minified][min] and [Base62][base62] versions, were made using [Dean Eduards Packer][packer].
+
+[base62]:       binder.base62.js
+[contextAttr]:  #context
+[defaultClass]: #defaultclass
+[groupAttr]:    #group
+[min]:          binder.min.js
+[packer]:       http://dean.edwards.name/packer/ 
