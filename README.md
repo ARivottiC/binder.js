@@ -89,7 +89,7 @@ Attach the element as a `Binder` object.
         The context's method name. See [*`context`* attribute][contextAttr]. Default is *none*.
 
     * **type**
-        
+
         Space separeted names. Each type will be transform in a is* attribute with value true.
 
 
@@ -240,19 +240,19 @@ TODO
 
 ### *deselect*() ###
 
-TODO
+Removes class `selected` from element
 
 ### *isHidden*() ###
 
-TODO
+Returns true if element has class `hidden`
 
 ### *isSelected*() ###
 
-TODO
+Returns true if element has class `selected`
 
 ### *hide*() ###
 
-TODO
+Adds class `hidden` to element
 
 ### *next*() ###
 
@@ -264,11 +264,11 @@ TODO
 
 ### *select*() ###
 
-TODO
+Adds class `selected` to element
 
 ### *show*() ###
 
-TODO
+Removes class `hidden` from element
 
 ### *swap*(`sibling`) ###
 
