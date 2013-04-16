@@ -13,7 +13,7 @@
 
     <div>
         <h2>Hello World</h2>
-        <a href="#" data-binder="AppButton">Click Me</a>    
+        <a href="#" data-binder="AppButton">Click Me</a>
     </div>
 
     <div>
@@ -28,11 +28,22 @@
         </li>
     </div>
 
+    <div>
+        <h2>Other List</h2>
+        <ul>
+            <li data-binder="SelectItem">Buy Milk</li>
+            <li data-binder="SelectItem">Feed the chicken</li>
+            <li data-binder="SelectItem">Clean the house</li>
+            <li data-binder="SelectItem">Play piano</li>
+            <li data-binder="SelectItem">Pet the kitten</li>
+        </ul>
+    </div>
+
     <script src="../lib/augment.min.js"></script>
     <script src="../binder.js"></script>
     <script src="index.js"></script>
 
-    <script type="text/javascript">        
+    <script type="text/javascript">
         app = new Binder( document.body );
     </script>
 </body>

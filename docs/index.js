@@ -61,4 +61,16 @@
             Binder.call( obj, elem, parent, args );
         }
     });
+
+    define('SelectItem', Binder, {
+        constructor: function() {
+            Binder.apply(this, arguments);
+            Binder.on( this, 'click' );
+        },
+        click: function () {
+            if (this.isSelected()) { this.deselect(); }
+            else                   { this.select();   }
+        }
+    });
+
 })( Binder );

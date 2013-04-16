@@ -1,4 +1,9 @@
 .selected { font-weight: bold }
 .hidden   { display: none }
 
+/* For Select example */
+ul          { list-style: none; }
+li          { width: 200px; cursor: pointer;  }
+li.selected { list-style: square; font-weight: bold }
+
 [data-binder-tmpl] { display: none }
