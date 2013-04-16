@@ -113,7 +113,7 @@ Class Methods
 
 ### *define*(`name`, `extend`[, `implement`, ...], `override`) ###
 
-Defined a new `Binder` class.
+Defined a new `Binder` class and return it.
 
 * **`name`**
 
@@ -134,7 +134,7 @@ Defined a new `Binder` class.
 
 ### *no*(`object`, `event`, `function`) ###
 
-Add an event to object. 
+Remove an event from object.
 
 * **`object`**
 
@@ -146,7 +146,7 @@ Add an event to object.
 
 * **`function`**
 
-    A `Function` to be executed on event trigger. If *undefined* will assume **`object`**[**`event`**].
+    A `Function` to be removed. If *undefined* will assume **`object`**[**`event`**]. TODO: if *null*, clear all object events. 
 
 
 ### *object*(`name`) ###
@@ -160,7 +160,7 @@ Return a `Binder` class by `name`.
 
 ### *on*(`object`, `event`, `function`) ###
 
-Remove an event from object. 
+Add an event to object and returns it. 
 
 * **`object`**
 
@@ -172,7 +172,7 @@ Remove an event from object.
 
 * **`function`**
 
-    A `Function` to be removed. If *undefined* will assume **`object`**[**`event`**]. TODO: if *null*, clear all object events. 
+    A `Function` to be executed on event trigger. If *undefined* will assume **`object`[`event`]**.
 
 
 Object Attributes
@@ -203,7 +203,7 @@ Object Methods
 
 ### *attach*(`elem`|`template`[, `args`]) ###
 
-Attach a child to object.
+Attach a child to object and returns it.
 
 * **'elem`**
     
@@ -222,69 +222,108 @@ Attach a child to object.
 
 Returns a `BinderCollection` with all th object's children.
 
-* **`filter`**
+* **`function`**
 
-    TODO
+    A `Function` to filter children;
 
 * **`index`**
 
-    TODO
+    A `Number` to filter by children index.
 
 ### *destructor*() ###
 
-TODO
+Object destructor.
 
 ### *dettach*([`child`]) ###
 
-TODO
+Dettach an object's child. If no `child` is given, dettach the last child.
+
+* **`child`**
+
+    A `Number` with the child's index to be removed.
 
 ### *deselect*() ###
 
-TODO
+Remove selection mark from object. Returns *object*.
 
 ### *isHidden*() ###
 
-TODO
+Check if current object is hidden. Returns `true` or `false`.
 
 ### *isSelected*() ###
 
-TODO
+Check if object is marked as selected. Returns `true` of `false`.
 
 ### *hide*() ###
 
-TODO
+Mark object as hidden. Returns *object*.
 
 ### *next*() ###
 
-TODO
+Returns the next sibling or `false`.
 
 ### *prev*() ###
 
-TODO
+Returns the previous sibling or `false`.
 
 ### *select*() ###
 
-TODO
+Mark object as selected. Returns *object*.
 
 ### *show*() ###
 
-TODO
+Remove hidden mark from object. Returns *object*.
 
 ### *swap*(`sibling`) ###
 
-TODO
+Swap object with `sibling`. Retuns an `Array`with the swapped indexes.
 
-### *update*(`value`) ###
+* **`sibling`**
 
-TODO
+    A `Binder` object with the same parent.
 
-### *value*(`value`) ###
 
-TODO
+### *update*([`Array`|`Object`|`String`|`null`]) ###
+
+Update the object. Return values may vary.
+
+* **`Array`**
+
+    For each item, attach a child, if index don't exists, and updates the child with value given. This logic may change:
+        * a **isAppender** object allays append a child;
+        * a **isPrepender** object allays prepend a child;
+    Returns _*object.children()*_.
+
+* **`Object`**
+
+    For each *key*, in `Object`:
+        * is a `Function`, call it using *value* as parameter;
+        * is a child, call *`child`.`update`* using *value* as parameter;
+        * is an attribute, update it;
+    Returns *object*.
+
+* **`String`**|**`null`** or no value supplyed.
+
+    Returns *object.value* using *value* as parameter. 
+
+
+### *value*([`value`|`null`]) ###
+
+Returns the element's innerHTML value.
+
+* **`value`** 
+
+    Chanhe the element's innerHTML. This implies dettaching all children;
+
+* **`null`** 
+
+    Chanhe the element's innerHTML to null. This implies dettaching all children;
+
 
 BinderCollection
 --------------------
 
+TODO
 
 Road map 
 --------------------

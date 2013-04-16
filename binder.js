@@ -148,6 +148,7 @@
         var elem = obj.elem;
         if ( ! hasClass( obj, regexp ) )
             elem.className = elem.className.concat( ' ', val ).trim();
+        return obj;
     }
 
     // push a child to an Array like object 
@@ -248,7 +249,7 @@
     function no( obj, event, fn ) {
         // TODO: check/remove listeners 
         var elem = obj.elem;
-        elem.removeEventListener.apply( elem, arguments ); 
+        return elem.removeEventListener.apply( elem, arguments ); 
     }
 
     //
@@ -274,15 +275,14 @@
             } 
         );
 
-        obj.elem.addEventListener( event, listener, capture ); 
-
-        return obj;
+        return obj.elem.addEventListener( event, listener, capture ); 
     }
 
     // remove object's element class
     function remClass( obj, regexp ) {
         var elem = obj.elem;
         elem.className = elem.className.replace( regexp, '' ).trim();
+        return obj;
     }
 
     // add is* methods based on type
@@ -522,10 +522,10 @@
             obj = null;
         }
 
-      , deselect  : function () { remClass( this, rSelected ); }
+      , deselect  : function () { return remClass( this, rSelected ); }
       , isHidden  : function () { return hasClass( this, rHidden ); }
       , isSelected: function () { return hasClass( this, rSelected ); }
-      , hide      : function () { addClass( this, rHidden, 'hidden' ); }
+      , hide      : function () { return addClass( this, rHidden, 'hidden' ); }
       , length    : 0
       , next      : function () {
             var parent = this.parent;
@@ -551,8 +551,8 @@
 
             return false;
         }
-      , select: function () { addClass( this, rSelected, 'selected'); }
-      , show  : function () { remClass( this, rHidden ); }
+      , select: function () { return addClass( this, rSelected, 'selected'); }
+      , show  : function () { return remClass( this, rHidden ); }
       , swap  : function ( sibling ) {
             var parent = this.parent;
 
@@ -598,6 +598,8 @@
 
                     child.update( value );
                 });
+
+                return this.children();
             } 
             else if ( isObj( val ) ) {
                 for ( var key in val ) {
@@ -612,6 +614,8 @@
                         else
                             obj[ key ] = value;
                 }
+
+                return this;
             }
             else
                 return obj.value( val );
@@ -634,7 +638,7 @@
         } 
     }
     , Binder.prototype.constructor = Binder
-    , Binder.VERSION = '3.0.2'
+    , Binder.VERSION = '3.0.3'
 
     /*
      * Static object functions
