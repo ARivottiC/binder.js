@@ -2,9 +2,9 @@
     /* jshint laxcomma: true */
     "use strict";
 
-    var 
-        /* 
-         *  Aliases 
+    var
+        /*
+         *  Aliases
          */
         arrayProto = Array.prototype
       , each       = arrayProto.forEach
@@ -16,11 +16,11 @@
       , shift      = arrayProto.shift
       , slice      = arrayProto.slice
       , splice     = arrayProto.splice
-         
-        /* 
+
+        /*
          *  Internal objects, variables 
          */
-      , oGroup    = {} 
+      , oGroup    = {}
       , oTemplate = {}
       , oObject   = { 'Binder': Binder }
       , oListener = {}
@@ -36,28 +36,28 @@
       , rHidden    = /(?:^|\s+)hidden(?!\S)/
       ;
 
-    // 
+    //
     function Dummy() {}
 
-    /* 
-     *  Functions 
+    /*
+     *  Functions
      */
 
     // get a Binder object by name
     function object( name ) { return oObject[ name ]; }
 
-    // 
+    //
     function define( name, ExtClass ) {
         var impClasses = slice.call( arguments, 2 )
           , length     = impClasses.length
           , override   = ( impClasses.pop() || {} ) // TODO: avoind creating unecessary object
-          ; 
-    
+          ;
+
         /* jshint laxbreak:true, -W054 */
         var Class = (
             new Function(
                 "c",
-                'return function ' 
+                'return function '
                     + name 
                     + '(e,p,a) { c.call(this,e,p,a) }'
             )
@@ -138,8 +138,8 @@
         return merged;
     }
 
-    /* 
-     * Object functions 
+    /*
+     * Object functions
      */
 
     // add a class to object's element.
@@ -407,7 +407,7 @@
         attach  : function ( elem, arg ) {
             var obj = this;
 
-            // TODO: the ideia is to check if elem is a string or number,
+            // TODO: the idea is to check if elem is a string or number,
             //  check for a better way
             if ( ! elem.nodeType ) {
                 elem = oTemplate[ obj.guid ][ elem ].cloneNode( true ); // TODO: re-evaluate template
@@ -437,7 +437,7 @@
                 throw "not a Binder Object!";
 
             // if a name was given, used as a parent's method
-            //  TODO: check if allready exists
+            //  TODO: check if already exists
             if ( ! isUndef( name )  )
                 child.context[ name ] = child;
 
@@ -561,7 +561,7 @@
               , index2 = indexOf.call( parent, sibling )
               ;
 
-            if ( index2 < 0 ) 
+            if ( index2 < 0 )
                 return false; // TODO: maybe not the best solution...
 
             console.log( index1, index2 );
@@ -593,14 +593,14 @@
                         child = obj[ index ];
                     else
                         child = obj.attach( value.template || 0 );
-                    
+
                     delete value.template;
 
                     child.update( value );
                 });
 
                 return this.children();
-            } 
+            }
             else if ( isObj( val ) ) {
                 for ( var key in val ) {
                     var value = val[ key ];
@@ -643,10 +643,10 @@
     /*
      * Static object functions
      */
-    , Binder.define = define 
-    , Binder.no     = no 
+    , Binder.define = define
+    , Binder.no     = no
     , Binder.object = object
-    , Binder.on     = on 
+    , Binder.on     = on
 
     /*
      * Attributes intended to be override 
