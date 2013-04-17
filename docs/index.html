@@ -18,11 +18,13 @@
 
     <div>
         <h2>List</h2>
-        <div data-binder="class: AppList">
+        <div data-binder="name: List, type: context">
             <a href="#" data-binder="AppListAdd">Add Item</a>
-            <ul data-binder="AppListContainer">
-                <li data-binder="group: AppListItems" data-binder-tmpl>
-                    <a href="#" data-binder="AppListRem">Remove Item</a>
+            <ul data-binder="name: Container, type: context appender">
+                <li data-binder="type: context, group: AppListItems" data-binder-tmpl>
+                    <span data-binder="Value"></span>
+                    <a href="#" data-binder="AppListDel">Remove Item</a>
+                    <a href="#" data-binder="AppListSel">Select Item</a>
                 </li>
             </ul>
         </li>

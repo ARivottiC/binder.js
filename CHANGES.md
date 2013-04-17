@@ -1,3 +1,13 @@
+3.0.4
+    * fixed swap method
+    * fixed array methods in BinderCollection
+    * code cleanup
+    * better exanples
+
+3.0.3
+    * minor code improvements
+    * documentation milestone II
+
 3.0.2
     * Binder.merge removed
     * on and no are now Class methods

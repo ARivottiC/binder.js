@@ -15,50 +15,53 @@
       , click: function () { alert('Hello World!'); }
     });
 
-    define('AppList', Binder, {
-        constructor: function ( elem, parent, args ) {
-            var obj = this;
-            obj.name      = 'List';
-            obj.isContext = true;
-
-            Binder.call( obj, elem, parent, args );
-        }
-    });
-
     define('AppListAdd', Binder, {
         constructor: function ( elem, parent, args ) {
             var obj = this;
             obj.name = 'Add';
 
-            Binder.call( obj, elem, parent, args );
+            Binder.apply( obj, arguments );
 
             on( obj, 'click' );
         }
       , click: function () { 
-            this.context.Container.attach(0);
+            this.context.Container.update([ 
+                { Value: 'Random value: ' + Math.random() } 
+            ]);
         }
     });
 
-    define('AppListRem', Binder, {
+    define('AppListDel', Binder, {
         constructor: function ( elem, parent, args ) {
-            var obj = this;
+            var obj  = this;
+            obj.name = 'Del';
 
-            Binder.call( obj, elem, parent, args );
+            Binder.apply( obj, arguments );
 
             on( obj, 'click' );
         }
       , click: function () { 
-            this.context.Container.dettach( this );
+            var item = this.context;
+            item.context.dettach( item );
         }
     });
 
-    define('AppListContainer', Binder, {
+    define('AppListSel', Binder, {
         constructor: function ( elem, parent, args ) {
-            var obj = this;
-            obj.name       = 'Container';
-            obj.isAppender = true;
+            var obj  = this;
+            obj.name = 'Sel';
 
-            Binder.call( obj, elem, parent, args );
+            Binder.apply( obj, arguments );
+
+            on( obj, 'click' );
+        }
+      , click: function () {
+            if ( this.isSelected() ) 
+                return false;
+
+            var item = this.context;
+            item.group.isSelected().exec('deselect');
+            item.select();
         }
     });
 })( Binder );

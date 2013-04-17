@@ -323,7 +323,6 @@
         // execute a given method in all children
         exec: function ( fn ) {
             var args = splice.call( arguments, 1 );
-            console.log( args );
             this.forEach( function ( child ) { 
                 child[ fn ].apply( child, args ); 
             });
@@ -332,7 +331,7 @@
 
         // returns a BinderCollection (see Array.filter)
       , filter: function () {
-            return binderColSlice.apply( filter.apply( this, arguments ) );
+            return this.slice.apply( filter.apply( this, arguments ) );
         }
 
         // returns all hidden children
@@ -343,7 +342,7 @@
 
         // returns a BinderCollection (see Array.map)
       , map: function () {
-            return binderColSlice.apply( map.apply( this, arguments ) );
+            return this.slice.apply( map.apply( this, arguments ) );
         }
 
         // returns a BinderCollection (see Array.slice)
@@ -355,7 +354,7 @@
 
         // returns a BinderCollection (see Array.splice)
       , splice: function () {
-            return binderColSlice.apply( splice.apply( this, arguments ) );
+            return this.slice.apply( splice.apply( this, arguments ) );
         }
     });
 
@@ -565,8 +564,9 @@
             if ( index2 < 0 ) 
                 return false; // TODO: maybe not the best solution...
 
-            this[ index1 ] = splice.call( 
-                    this, index2, 1, this[ index1 ] 
+            console.log( index1, index2 );
+            parent[ index1 ] = splice.call( 
+                    parent, index2, 1, parent[ index1 ] 
                 ).pop();
 
             var a = this.elem;
@@ -638,7 +638,7 @@
         } 
     }
     , Binder.prototype.constructor = Binder
-    , Binder.VERSION = '3.0.3'
+    , Binder.VERSION = '3.0.4'
 
     /*
      * Static object functions
