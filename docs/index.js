@@ -34,7 +34,7 @@
 
             on( obj, 'click' );
         }
-      , click: function () { 
+      , click: function () {
             this.context.Container.attach(0);
         }
     });
@@ -47,7 +47,7 @@
 
             on( obj, 'click' );
         }
-      , click: function () { 
+      , click: function () {
             this.context.Container.dettach( this );
         }
     });

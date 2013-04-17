@@ -22,21 +22,12 @@
             <a href="#" data-binder="AppListAdd">Add Item</a>
             <ul data-binder="AppListContainer">
                 <li data-binder="group: AppListItems" data-binder-tmpl>
-                    <a href="#" data-binder="AppListRem">Remove Item</a>
+                    <div>
+                        <span data-binder="SelectItem">Buy the milk</span> <a href="#" data-binder="AppListRem">X</a>
+                    </div>
                 </li>
             </ul>
         </li>
-    </div>
-
-    <div>
-        <h2>Other List</h2>
-        <ul>
-            <li data-binder="SelectItem">Buy Milk</li>
-            <li data-binder="SelectItem">Feed the chicken</li>
-            <li data-binder="SelectItem">Clean the house</li>
-            <li data-binder="SelectItem">Play piano</li>
-            <li data-binder="SelectItem">Pet the kitten</li>
-        </ul>
     </div>
 
     <script src="../lib/augment.min.js"></script>
