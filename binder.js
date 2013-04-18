@@ -564,7 +564,6 @@
             if ( index2 < 0 )
                 return false; // TODO: maybe not the best solution...
 
-            console.log( index1, index2 );
             parent[ index1 ] = splice.call( 
                     parent, index2, 1, parent[ index1 ] 
                 ).pop();

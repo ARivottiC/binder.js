@@ -18,13 +18,27 @@
 
     <div>
         <h2>List</h2>
-        <div data-binder="name: List, type: context">
-            <a href="#" data-binder="AppListAdd">Add Item</a>
+        <div data-binder="name: List, class: AppController">
+            <form data-binder="AppForm">
+                <input type="text" data-binder="class: AppInput, name: Input"> 
+                <input type="submit" value="Add Item">
+                <span data-binder="class: AppError, delay: 1500" class="hidden">Must suplly a value!</span>
+            </form>
             <ul data-binder="name: Container, type: context appender">
-                <li data-binder="type: context, group: AppListItems" data-binder-tmpl>
-                    <span data-binder="Value"></span>
-                    <a href="#" data-binder="AppListDel">Remove Item</a>
-                    <a href="#" data-binder="AppListSel">Select Item</a>
+                <li data-binder="AppItem" data-binder-tmpl>
+                    <form data-binder="class: AppForm, name: Form" class="hidden">
+                        <input type="text" data-binder="class: AppInput, name: Input"> 
+                        <input type="submit" value="Update Item">
+                        <span data-binder="class: AppError, delay: 1500" class="hidden">Must suplly a value!</span>
+                    </form>
+                    <span data-binder="View">
+                        <span data-binder="Value"></span> 
+                        <a href="#" data-binder="AppEdit">Edit Item</a>
+                        <a href="#" data-binder="AppDel">Remove Item</a>
+                        <a href="#" data-binder="AppSel">Select Item</a>
+                        <a href="#" data-binder="AppUp">Move Up</a>
+                        <a href="#" data-binder="AppDown">Move Down</a>
+                    </span>
                 </li>
             </ul>
         </li>
