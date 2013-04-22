@@ -2,8 +2,7 @@
     /* jshint laxcomma: true */
     "use strict";
 
-    var object = Binder.object
-      , define = Binder.define
+    var define = Binder.define
       , on     = Binder.on
       ;
 
@@ -12,10 +11,9 @@
             Binder.apply( this, arguments );
             on( this, 'click' );
         }
-      , click: function () { alert('Hello World!'); }
     });
 
-    define('AppController', Binder, {
+    define('AppController', Binder.Appender, {
         constructor: function () {
             this.isContext = true;
             Binder.apply( this, arguments );
@@ -24,7 +22,7 @@
             if ( Array.isArray( val ) )
                 return this.Container.update( val );
 
-            return Binder.prototype.update( this, val );
+            return Binder.prototype.update.call( this, val );
         }
     });
 
@@ -38,6 +36,8 @@
             this.Value.value( val ); 
             this.Form.hide();
             this.View.show();
+
+            return this;
         }
     });
 
@@ -45,32 +45,20 @@
         constructor: function () {
             this.isContext = true;
             Binder.apply( this, arguments );
-            on( this, 'submit')
+            on( this, 'submit');
         }
-      , submit: function ( event ) {
-            var input = this.Input
-              , value = input.value();
+      , submit: function () {
+            var text = this.Text
+              , value = text.value();
 
             if ( value ) {
-                // context.update know's what to do with this
+                // context.update knows what to do with this
                 this.context.update([ value ]);
-                input.value( null );
+                text.value( null );
             } else
                 this.Error.show();
-
-            if ( event )
-                event.returnValue = false;
-        }
-    });
-
-    define('AppInput', Binder, {
-        value: function ( val ) {
-            var elem = this.elem;
-       
-            if ( val !== void 0 )
-                elem.value = val;
-        
-            return elem.value; 
+            
+            return false;
         }
     });
 
@@ -82,29 +70,27 @@
         }
       , hide: function () {
             delete this.timeout;
-            Binder.prototype.hide.call( this );
+            return Binder.prototype.hide.call( this );
         }
       , show: function () {
-            Binder.prototype.show.call( this );
-            
-            clearTimeout( this.timeout );
+            var obj = this;
 
-            var that = this;
-            this.timeout = setTimeout( 
-                function () { that.hide(); }, this.delay 
+            Binder.prototype.show.call( obj );
+            clearTimeout( obj.timeout );
+
+            obj.timeout = setTimeout( 
+                function () { obj.hide(); }, obj.delay 
             );
 
-            return this;
+            return obj;
         }
     });
 
     define('AppEdit', AppButton, {
         click: function () { 
-            var item = this.context;
-
-            item.View.hide();
-            item.Form.update({ Input: item.Value.value() } ).show();
-
+            var context = this.context;
+            context.View.hide();
+            context.Form.update({ Text: context.Value.value() } ).show();
             return false;
         }
     });
@@ -117,10 +103,10 @@
         }
     });
 
-    define('AppSel', AppButton, {
-        click: function () {
-            this.select();
-            return false;
+    define('AppSel', Binder, {
+        constructor: function () {
+            Binder.apply( this, arguments );
+            on( this, 'click', this.select );
         }
       , select: function () {
             if ( ! this.isSelected() ) {
@@ -138,15 +124,15 @@
         if ( sibling )
             obj.swap( sibling );
 
-        return false;   
+        return false;
     }
 
     define('AppUp', AppButton, {
-        click: function () { move( this.context, 'prev') }
+        click: function () { return move( this.context, 'prev'); }
     });
 
     define('AppDown', AppButton, {
-        click: function () { move( this.context, 'next') }
+        click: function () { return move( this.context, 'next'); }
     });
 
 })( Binder );

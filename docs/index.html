@@ -12,32 +12,27 @@
     <h1>Binder Examples</h1>
 
     <div>
-        <h2>Hello World</h2>
-        <a href="#" data-binder="AppButton">Click Me</a>    
-    </div>
-
-    <div>
         <h2>List</h2>
         <div data-binder="name: List, class: AppController">
             <form data-binder="AppForm">
-                <input type="text" data-binder="class: AppInput, name: Input"> 
+                <input type="text" name="Text" data-binder="Input"> 
                 <input type="submit" value="Add Item">
                 <span data-binder="class: AppError, delay: 1500" class="hidden">Must suplly a value!</span>
             </form>
-            <ul data-binder="name: Container, type: context appender">
+            <ul data-binder="name: Container, class: Appender, type: context">
                 <li data-binder="AppItem" data-binder-tmpl>
                     <form data-binder="class: AppForm, name: Form" class="hidden">
-                        <input type="text" data-binder="class: AppInput, name: Input"> 
+                        <input type="text" name="Text" data-binder="Input"> 
                         <input type="submit" value="Update Item">
-                        <span data-binder="class: AppError, delay: 1500" class="hidden">Must suplly a value!</span>
+                        <span data-binder="class: AppError, delay: 1000" class="hidden">Must suplly a value!</span>
                     </form>
                     <span data-binder="View">
                         <span data-binder="Value"></span> 
-                        <a href="#" data-binder="AppEdit">Edit Item</a>
-                        <a href="#" data-binder="AppDel">Remove Item</a>
-                        <a href="#" data-binder="AppSel">Select Item</a>
-                        <a href="#" data-binder="AppUp">Move Up</a>
-                        <a href="#" data-binder="AppDown">Move Down</a>
+                        <button data-binder="AppEdit">Edit</button>
+                        <button data-binder="AppDel">Remove</button>
+                        <button data-binder="AppSel">Select</button>
+                        <button data-binder="AppUp">Up</button>
+                        <button data-binder="AppDown">Down</button>
                     </span>
                 </li>
             </ul>
@@ -46,6 +41,7 @@
 
     <script src="../lib/augment.min.js"></script>
     <script src="../binder.js"></script>
+    <script src="../binderx.js"></script>
     <script src="index.js"></script>
 
     <script type="text/javascript">        

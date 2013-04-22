@@ -149,15 +149,6 @@ Remove an event from object.
     A `Function` to be removed. If *undefined* will assume **`object`**[**`event`**]. TODO: if *null*, clear all object events. 
 
 
-### *object*(`name`) ###
-
-Return a `Binder` class by `name`.
-
-* **`name`**
-    
-    A `String` with the class name.
-
-
 ### *on*(`object`, `event`, `function`) ###
 
 Add an event to object and returns it. 
@@ -283,16 +274,9 @@ Swap object with `sibling`. Retuns an `Array`with the swapped indexes.
     A `Binder` object with the same parent.
 
 
-### *update*([`Array`|`Object`|`String`|`null`]) ###
+### *update*([`Object`|`String`|`null`]) ###
 
 Update the object. Return values may vary.
-
-* **`Array`**
-
-    For each item, attach a child, if index don't exists, and updates the child with value given. This logic may change:
-        * a **isAppender** object allays append a child;
-        * a **isPrepender** object allays prepend a child;
-    Returns _*object.children()*_.
 
 * **`Object`**
 

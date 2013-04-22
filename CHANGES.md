@@ -1,3 +1,15 @@
+3.1.0
+    * isAppender and isPrepender removed
+    * array value logic removed from update 
+    * added binderx.js with:
+        * Binder.Updater
+        * Binder.Appender
+        * Binder.Prepender
+        * Binder.Input
+    * Binder classes can now be accessed directly as Binder.%
+    * Binder.object removed
+    * events now preventDefault and stopPropagation on return false 
+
 3.0.4
     * fixed swap method
     * fixed array methods in BinderCollection

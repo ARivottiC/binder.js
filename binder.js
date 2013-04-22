@@ -22,7 +22,6 @@
          */
       , oGroup    = {}
       , oTemplate = {}
-      , oObject   = { 'Binder': Binder }
       , oListener = {}
       , guid      = 1
 
@@ -42,9 +41,6 @@
     /*
      *  Functions
      */
-
-    // get a Binder object by name
-    function object( name ) { return oObject[ name ]; }
 
     //
     function define( name, ExtClass ) {
@@ -78,7 +74,7 @@
         Class.prototype.constructor = Class;
 
         /* jshint boss: true */
-        return ( oObject[ name ] = Class );
+        return ( Binder[ name ] = Class );
     }
 
     // return the id(or name) attribute value from an element
@@ -101,7 +97,7 @@
             }
         } 
         // Is a Class
-        else if ( object( val ) )
+        else if ( Binder[ val ] )
             obj.class = val;
         // Is Name
         else
@@ -170,14 +166,10 @@
         var isAppender = ! obj.length      // empty, push allways work 
                       || isUndef( index )  // index is not defined 
                       || ! obj[ index ]    // or doesn'ts have that child
+                      || index !== 0       // or index not 0 
           , childElem  = child.elem
           , parentElem = obj.elem
           ;
-
-        if ( obj.isPrepender && obj.length ) {
-            index      = 0;
-            isAppender = false;
-        }
 
         // add element to the dom if the element has no parent
         if ( ! childElem.parentNode )
@@ -271,7 +263,12 @@
         // get the listener for this object + event + function ( set if first time )
         var listener = eL[ fn.guid ] || ( 
             eL[ fn.guid ] = function ( event ) {
-                return fn.call( obj, event );
+                var result = fn.call( obj, event );
+                if ( result === false ) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                return result;
             } 
         );
 
@@ -424,7 +421,7 @@
             if ( attachTemplate( obj, elem, arg ) )
                 return ;
 
-            var Constructor = object( arg.class );
+            var Constructor = Binder[ arg.class ];
 
             if ( isUndef( Constructor ) )
                 throw "can't use " + arg.class + ", maybe you forgot to set it?";
@@ -584,23 +581,7 @@
       , update  : function ( val ) {
             var obj = this;
 
-            if ( Array.isArray( val ) ) {
-                each.call( val, function ( value, index ) {
-                    var child;
-
-                    if ( has( obj, index ) && !( obj.isAppender || obj.isPrepender ) )
-                        child = obj[ index ];
-                    else
-                        child = obj.attach( value.template || 0 );
-
-                    delete value.template;
-
-                    child.update( value );
-                });
-
-                return this.children();
-            }
-            else if ( isObj( val ) ) {
+            if ( isObj( val ) ) {
                 for ( var key in val ) {
                     var value = val[ key ];
                     var child = obj[ key ];
@@ -614,7 +595,7 @@
                             obj[ key ] = value;
                 }
 
-                return this;
+                return obj;
             }
             else
                 return obj.value( val );
@@ -644,7 +625,6 @@
      */
     , Binder.define = define
     , Binder.no     = no
-    , Binder.object = object
     , Binder.on     = on
 
     /*
@@ -655,6 +635,11 @@
 
     // default class name
     , Binder.defaultClass = 'Binder'
+
+    /*
+     * Binder Classes
+     */
+    , Binder.Binder = Binder
     ;
 
     window.Binder = Binder;
