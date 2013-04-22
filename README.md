@@ -297,11 +297,11 @@ Returns the element's innerHTML value.
 
 * **`value`** 
 
-    Chanhe the element's innerHTML. This implies dettaching all children;
+    Change the element's innerHTML. This implies dettaching all children;
 
 * **`null`** 
 
-    Chanhe the element's innerHTML to null. This implies dettaching all children;
+    Change the element's innerHTML to null. This implies dettaching all children;
 
 
 BinderCollection
