@@ -14,8 +14,10 @@
             if ( Array.isArray( val ) ) {
                 each.call( val, function ( value, index ) {
                     var child = obj.attach( value.template || 0 );
-                    delete value.template;
-                    child.update( value );
+                    if ( value !== void 0 ) {
+                        delete value.template;
+                        child.update( value );
+                    }
                 });
 
                 return obj.children();
@@ -58,8 +60,10 @@
                               : obj.attach( value.template || 0 )
                               ;
 
-                    delete value.template;
-                    child.update( value );
+                    if ( value !== void 0 ) {
+                        delete value.template;
+                        child.update( value );
+                    }
                 });
 
                 return obj.children();

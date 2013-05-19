@@ -307,14 +307,63 @@ Returns the element's innerHTML value.
 BinderCollection
 --------------------
 
-TODO
+... is an `Array` of `Binder` objects. Some functions where override to return a new `BinderCollection` but they work as expected.
+
+### *exec*(`method`[, `arg1`, `arg2`, ...]) ###
+
+Execute the given method, with given args, on each item.
+
+### *filter*(...) ###
+
+See `Array`.`filter`. Returns a `BinderCollection`.
+
+### *isHidden*(..) ###
+
+Return a `BinderCollection` with all items hidden.
+
+### *isSelected*(..) ###
+
+Return a `BinderCollection` with all items selected.
+
+### *map*(...) ###
+
+See `Array`.`map`. Returns a `BinderCollection`.
+
+### *slice*(...) ###
+
+See `Array`.`slice`. Returns a `BinderCollection`.
+
+### *splice*(...) ###
+
+See `Array`.`splice`. Returns a `BinderCollection`.
+
+binderx.js
+--------------------
+
+**binderx.js** add working examples of how to create base objects to extend. These will probably be needed in any project but **binder.js** don't require them to work.
+
+### `Appender` ###
+
+Allow **update** function to receive an `Array` to append children to object. Each item of the `Array` will be used to execute the child's **update** function.
+
+### `Input` ###
+
+Change the **value** function to interact with the *value* attribute.
+
+### `Prepender` ###
+
+Allow **update** function to receive an `Array` to prepend children to object. Each item of the `Array` will be used to execute the child's **update** function.
+
+### `Updater` ###
+
+Allow **update** function to receive an `Array` to update children's object. Each item of the `Array` will be used to execute the child's **update** function.
+
 
 Road map 
 --------------------
 
 * Documentation and examples
 * Re-evaluate group attribute as method 
-* Re-evaluate isAppender, isPrepender and isUpdater logic
 * Proper implementation of Binder.no
 * Improve template manipulation
 * Improve error handling

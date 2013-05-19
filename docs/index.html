@@ -39,6 +39,46 @@
         </li>
     </div>
 
+    <div>
+        <h2>Table</h2>
+        <div data-binder="name: Table, class: AppController">
+            <form data-binder="AppForm">
+                <input type="text" name="Text" data-binder="Input"> 
+                <input type="submit" value="Add Item">
+                <span data-binder="class: AppError, delay: 1500" class="hidden">Must suplly a value!</span>
+            </form>
+            <table data-binder="name: Container, class: Appender, type: context">
+                <thead>
+                    <tr>
+                        <td width="300">Text</td>
+                        <td>Actions</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-binder="AppItem" data-binder-tmpl>
+                        <td>
+                            <form data-binder="class: AppForm, name: Form" class="hidden">
+                                <input type="text" name="Text" data-binder="Input"> 
+                                <input type="submit" value="Update Item">
+                                <span data-binder="class: AppError, delay: 1000" class="hidden">Must suplly a value!</span>
+                            </form>
+                            <span data-binder="View">
+                                <button data-binder="AppEdit">Edit</button>
+                                <span data-binder="Value"></span> 
+                            </span>
+                        </td>
+                        <td>
+                            <button data-binder="AppDel">Remove</button>
+                            <button data-binder="AppSel">Select</button>
+                            <button data-binder="AppUp">Up</button>
+                            <button data-binder="AppDown">Down</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </li>
+    </div>
+
     <script src="../lib/augment.min.js"></script>
     <script src="../binder.js"></script>
     <script src="../binderx.js"></script>
