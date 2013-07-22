@@ -30,9 +30,9 @@ You must set the following **CSS** in order to use **binder.js**:
 
 ```css
 .selected { font-weight: bold }
-.hidden   { display: none }
-
-[data-binder-tmpl] { display: none }
+.hidden, [data-binder-tmpl] {
+    display: none !important;
+    visibility: hidden; }
 ```
 
 Usage

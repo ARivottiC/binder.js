@@ -56,7 +56,7 @@
             if ( Array.isArray( val ) ) {
                 each.call( val, function ( value, index ) {
                     /* jshint laxbreak: true */
-                    var child = has( obj, index )
+                    var child = hasOwnProperty.call( obj, index )
                               ? obj[ index ]
                               : obj.attach( value.template || 0 )
                               ;

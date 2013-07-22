@@ -1,4 +1,4 @@
 .selected { font-weight: bold }
-.hidden   { display: none }
-
-[data-binder-tmpl] { display: none }
+.hidden, [data-binder-tmpl] {
+    display: none !important;
+    visibility: hidden; }
