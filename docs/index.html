@@ -79,6 +79,15 @@
         </li>
     </div>
 
+    <div>
+        <h2>Tree</h2>
+        <ul data-binder="name: Tree, class: AppTree">
+            <li data-binder="AppTreeItem" data-binder-tmpl>
+                <ul data-binder="AppTreeLeaf"></ul>
+            </li>
+        </ul>
+    </div>
+
     <script src="../lib/augment.min.js"></script>
     <script src="../binder.js"></script>
     <script src="../binderx.js"></script>

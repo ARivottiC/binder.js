@@ -1,14 +1,18 @@
+3.1.1
+    * support for config comments
+    * template method added
+
 3.1.0
-    * isAppender and isPrepender removed
+    * isappender and isprepender removed
     * array value logic removed from update 
     * added binderx.js with:
-        * Binder.Updater
-        * Binder.Appender
-        * Binder.Prepender
-        * Binder.Input
-    * Binder classes can now be accessed directly as Binder.%
-    * Binder.object removed
-    * events now preventDefault and stopPropagation on return false 
+        * binder.updater
+        * binder.appender
+        * binder.prepender
+        * binder.input
+    * binder classes can now be accessed directly as binder.%
+    * binder.object removed
+    * events now preventdefault and stoppropagation on return false 
 
 3.0.4
     * fixed swap method

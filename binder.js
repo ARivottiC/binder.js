@@ -33,6 +33,7 @@
       , rSpaces    = /\s+/
       , rSelected  = /(?:^|\s+)selected(?!\S)/
       , rHidden    = /(?:^|\s+)hidden(?!\S)/
+      , rBinder    = /^\s*binder\s*:\s*/
       ;
 
     //
@@ -75,6 +76,27 @@
 
         /* jshint boss: true */
         return ( Binder[ name ] = Class );
+    }
+
+    function filterComments( node ) { 
+        return node.nodeType == 8 && node.nodeValue.match( rBinder ); 
+    }
+
+    function parseComments( elem ) {
+        var obj = {}
+          , comments = slice.call( elem.childNodes ).filter( filterComments );
+
+        if ( comments.length > 0 ) {
+            var comment = comments.shift();
+            try {
+                obj = JSON.parse( comment.nodeValue.replace( rBinder, '' ) );
+                elem.removeChild( comment );
+            } catch(e) {
+                // TODO: catch error
+            }
+        }
+        
+        return obj;
     }
 
     // return the id(or name) attribute value from an element
@@ -414,6 +436,7 @@
             arg = merge( 
                     { class: Binder.defaultClass } 
                   , inflateVal( elem.getAttribute( Binder.defaultAttr ) ) 
+                  , parseComments( elem )
                   , arg
                 );
 
@@ -577,6 +600,9 @@
 
             return [ index1, index2 ];
         }
+      , template: function ( name ) { // TODO: not sure yet:::
+            return oTemplate[ guid ][ name ]
+        }
       , toString: function () { return '[object Binder]'; }
       , update  : function ( val ) {
             var obj = this;
@@ -618,7 +644,7 @@
         } 
     }
     , Binder.prototype.constructor = Binder
-    , Binder.VERSION = '3.0.4'
+    , Binder.VERSION = '3.1.1'
 
     /*
      * Static object functions
