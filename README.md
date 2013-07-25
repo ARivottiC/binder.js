@@ -6,7 +6,7 @@ Bind Javascript objects to HTML Elements.
 Background
 --------------------
 
-**binder.js** is a fork of **JsBinder**, a lib used by Sonaecom's PD-Portal Team, in projects like www.saphety.pt, www.clix.pt, www.optimusdiscos.pt and several [Clix TV](http://fibra.clix.pt//tv/) services. Since is a natural evolution from **JsBinder** v2, the first release of **binder.js** have the version 3.0.0..
+**binder.js** is a fork of **JsBinder**, a lib used by Sonaecom's PD-Portal Team, in projects like www.optimus.pt, www.saphety.pt, www.clix.pt, www.optimusdiscos.pt and several [Clix TV](http://fibra.clix.pt//tv/) services. Since is a natural evolution from **JsBinder** v2, the first release of **binder.js** have the version 3.0.0..
 
 **binder.js** were develop with the folowwing goals:
 
@@ -21,18 +21,18 @@ Requires
 
 **binder.js** was made for modern browsers. That said, if you want to use it older browsers, you must make sure to support the following: 
 
-* **`Array`**.**`prototype`**.**`forEach`**
-* **`Array`**.**`prototype`**.**`filter`**
-* **`Array`**.**`prototype`**.**`indexOf`**
-* **`Array`**.**`prototype`**.**`map`**
-* **`Array`**.**`prototype`**.**`slice`**
-* **`classList`**
+* **`Array`.`prototype`.`forEach`**
+* **`Array`.`prototype`.`filter`**
+* **`Array`.`prototype`.`indexOf`**
+* **`Array`.`prototype`.`map`**
+* **`Array`.`prototype`.`slice`**
+* **`Element`.`prototype`.`classList`**
 
 The following are only required if using the corresponding functionality:
 
-* **`JSON`**.**`parse`** for [HTML comments](#html-comments)
-* **`addEventListener`** for [on](#on)
-* **`removeEventListener`** for [of](#off) (eventually)
+* **`JSON`.`parse`** for [HTML comments](#html-comments)
+* **`Window`.`prototype`.`addEventListener`** for [on](#on)
+* **`Window`.`prototype`.`removeEventListener`** for [of](#off) (eventually)
 
 Thera are allready several Polyfills that cover the above. If you never used polyfills, or don't know where to start, consider [Jonatan Neal's polyfill](https://github.com/jonathantneal/polyfill).
 
@@ -331,7 +331,7 @@ Update the object. Return values may vary.
         * is an attribute, update it;
     Returns *object*.
 
-* **`String`**|**`null`** or no value supplyed.
+* **`String`|`null`** or no value supplyed.
 
     Returns *object.value* using *value* as parameter. 
 
