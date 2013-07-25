@@ -31,8 +31,6 @@
       , rComa      = /\s*,\s*/
       , rDColumn   = /\s*:\s*/
       , rSpaces    = /\s+/
-      , rSelected  = /(?:^|\s+)selected(?!\S)/
-      , rHidden    = /(?:^|\s+)hidden(?!\S)/
       , rBinder    = /^\s*binder\s*:\s*/
       ;
 
@@ -112,15 +110,14 @@
         var obj = {};
 
         if ( val.match( rDColumn ) ) {
-            var options = val.split( rComa );
-            for ( var key in options ) {
-                var value = options[ key ].split( rDColumn );
-                obj[ value.shift() ] = value.shift();
-            }
+            val.split( rComa ).forEach( function ( value ) {
+                var values = value.split( rDColumn );
+                obj[ values.shift() ] = values.shift();
+            });
         } 
         // Is a Class
         else if ( Binder[ val ] )
-            obj.class = val;
+            obj['class'] = val;
         // Is Name
         else
             obj.name = val;
@@ -161,11 +158,8 @@
      */
 
     // add a class to object's element.
-    //  requires a regexp to check for existence and the class to add
-    function addClass( obj, regexp, val ) {
-        var elem = obj.elem;
-        if ( ! hasClass( obj, regexp ) )
-            elem.className = elem.className.concat( ' ', val ).trim();
+    function addClass( obj, val ) {
+        obj.elem.classList.add( val );
         return obj;
     }
 
@@ -205,18 +199,14 @@
 
     // search children elements, width binder attribute set, and attach
     function attachChildren( obj, elem ) {
-        var children = slice.call( elem.children );
-
-        while ( children.length ) {
-            var child = children.shift();
-
-            // TODO: check if is an elemet. IE up to 8 considers comments as children... :S
+        each.call( elem.children, function ( child ) {
+             // TODO: check if is an elemet. IE up to 8 considers comments as children... :S
 
             if ( ! isNull( child.getAttribute( Binder.defaultAttr ) ) )
                 obj.attach( child );
             else
                 attachChildren( obj, child );
-        }
+        }); 
     }
 
     // associate a template to a object
@@ -252,8 +242,8 @@
     }
 
     // check if object's element has a given class set
-    function hasClass( obj, regexp ) {
-        return regexp.test( obj.elem.className );
+    function hasClass( obj, val ) {
+        return obj.elem.classList.contains( val );
     }
 
     function isHidden( obj ) { return obj.isHidden(); }
@@ -298,9 +288,8 @@
     }
 
     // remove object's element class
-    function remClass( obj, regexp ) {
-        var elem = obj.elem;
-        elem.className = elem.className.replace( regexp, '' ).trim();
+    function remClass( obj, val ) {
+        obj.elem.classList.remove( val );
         return obj;
     }
 
@@ -429,7 +418,7 @@
             // TODO: the idea is to check if elem is a string or number,
             //  check for a better way
             if ( ! elem.nodeType ) {
-                elem = oTemplate[ obj.guid ][ elem ].cloneNode( true ); // TODO: re-evaluate template
+                elem = this.template( elem ); // TODO: re-evaluate template
             }
 
             // Merge arg with attr configuration
@@ -444,10 +433,10 @@
             if ( attachTemplate( obj, elem, arg ) )
                 return ;
 
-            var Constructor = Binder[ arg.class ];
+            var Constructor = Binder[ arg['class'] ];
 
             if ( isUndef( Constructor ) )
-                throw "can't use " + arg.class + ", maybe you forgot to set it?";
+                throw "can't use " + arg['class'] + ", maybe you forgot to set it?";
 
             var child = new Constructor( elem, obj, arg )
               , name  = child.name
@@ -541,10 +530,10 @@
             obj = null;
         }
 
-      , deselect  : function () { return remClass( this, rSelected ); }
-      , isHidden  : function () { return hasClass( this, rHidden ); }
-      , isSelected: function () { return hasClass( this, rSelected ); }
-      , hide      : function () { return addClass( this, rHidden, 'hidden' ); }
+      , deselect  : function () { return remClass( this, 'selected' ); }
+      , isHidden  : function () { return hasClass( this, 'hidden'   ); }
+      , isSelected: function () { return hasClass( this, 'selected' ); }
+      , hide      : function () { return addClass( this, 'hidden'   ); }
       , length    : 0
       , next      : function () {
             var parent = this.parent;
@@ -570,8 +559,8 @@
 
             return false;
         }
-      , select: function () { return addClass( this, rSelected, 'selected'); }
-      , show  : function () { return remClass( this, rHidden ); }
+      , select: function () { return addClass( this, 'selected'); }
+      , show  : function () { return remClass( this, 'hidden' ); }
       , swap  : function ( sibling ) {
             var parent = this.parent;
 
@@ -601,7 +590,7 @@
             return [ index1, index2 ];
         }
       , template: function ( name ) { // TODO: not sure yet:::
-            return oTemplate[ guid ][ name ]
+            return oTemplate[ this.guid ][ name ].cloneNode( true );
         }
       , toString: function () { return '[object Binder]'; }
       , update  : function ( val ) {
@@ -644,7 +633,7 @@
         } 
     }
     , Binder.prototype.constructor = Binder
-    , Binder.VERSION = '3.1.1'
+    , Binder.VERSION = '3.1.2'
 
     /*
      * Static object functions

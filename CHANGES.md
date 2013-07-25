@@ -1,3 +1,13 @@
+3.1.2
+    * using classList for class atributte manipulation
+    * template method now returns a clone
+    * using forEach on Array like objects to prevent breaking in IE8
+    * fixed class called as a method (IE8 reserve word)
+    * removed polyfills from example and lib and suggest only waht to polyfill
+    * improved the Tree example
+    * template manipulations is good enougth
+    * clone logic is absolete... for now
+
 3.1.1
     * support for config comments
     * template method added

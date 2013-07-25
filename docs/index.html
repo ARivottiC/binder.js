@@ -83,12 +83,13 @@
         <h2>Tree</h2>
         <ul data-binder="name: Tree, class: AppTree">
             <li data-binder="AppTreeItem" data-binder-tmpl>
-                <ul data-binder="AppTreeLeaf"></ul>
+                <span data-binder="name: Text"></span>
+                <ul data-binder="name: Tree, class: AppTreeBranch"></ul>
             </li>
         </ul>
     </div>
 
-    <script src="../lib/augment.min.js"></script>
+    <!--script src="http://polyfill.io"></script-->
     <script src="../binder.js"></script>
     <script src="../binderx.js"></script>
     <script src="index.js"></script>

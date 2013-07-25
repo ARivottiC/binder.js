@@ -19,10 +19,22 @@ Background
 Requires
 --------------------
 
-**binder.js** assumes that your browser implements ECMAScript 5 and **`addEventListener`**. In order to use **binder.js** in browsers that don't meet any of this requirements, we suggest the use of the following polyfills:
+**binder.js** was made for modern browsers. That said, if you want to use it older browsers, you must make sure to support the following: 
 
-* [augment.js](https://github.com/olivernn/augment.js][augment.js) (or any other that implements ECMAScript 5 specification)
-* [EventListener.js](https://github.com/jonathantneal/EventListener) (or any other that add the same functionality)
+* **`Array`**.**`prototype`**.**`forEach`**
+* **`Array`**.**`prototype`**.**`filter`**
+* **`Array`**.**`prototype`**.**`indexOf`**
+* **`Array`**.**`prototype`**.**`map`**
+* **`Array`**.**`prototype`**.**`slice`**
+* **`classList`**
+
+The following are only required if using the corresponding functionality:
+
+* **`JSON`**.**`parse`** for [HTML comments](#html-comments)
+* **`addEventListener`** for [on](#on)
+* **`removeEventListener`** for [of](#off) (eventually)
+
+Thera are allready several Polyfills that cover the above. If you never used polyfills, or don't know where to start, consider [Jonatan Neal's polyfill](https://github.com/jonathantneal/polyfill).
 
 ### CSS ###
 
@@ -96,6 +108,26 @@ Attach the element as a `Binder` object.
 ### *data-binder-tmpl*[="`name`"] ###
 
 Attach the element as a template. By default **`name`** is the attach order.
+
+HTML Comments 
+--------------------
+
+It's also possible to configure a Binder object using JSON in HTML comments:
+
+```html
+<div data-binder><!--
+    binder: {
+        "name": "Table"
+      , "class": "AppController"
+    }
+--></div>
+```
+
+The same thing but with attributes:
+
+```html
+<div data-binder="name: Table, class: AppController"></div>
+```
 
 Class Attributes
 --------------------
@@ -274,6 +306,19 @@ Swap object with `sibling`. Retuns an `Array`with the swapped indexes.
     A `Binder` object with the same parent.
 
 
+### *template*([`String`|`Number`]) ###
+
+Returns a template element by name or position.
+
+* **`String`**
+
+    Returns a template element by name. 
+
+* **`Number`**
+
+    Returns a template element by position. 
+
+
 ### *update*([`Object`|`String`|`null`]) ###
 
 Update the object. Return values may vary.
@@ -365,9 +410,7 @@ Road map 
 * Documentation and examples
 * Re-evaluate group attribute as method 
 * Proper implementation of Binder.no
-* Improve template manipulation
 * Improve error handling
-* Add clone logic
 
 Acknowledges
 --------------------

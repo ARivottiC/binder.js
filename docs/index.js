@@ -135,21 +135,23 @@
         click: function () { return move( this.context, 'next'); }
     });
 
-    define('AppTree', Binder.Appender, {
+    var AppTree = define('AppTree', Binder.Appender, {
         constructor: function () {
             this.isContext = true;
-            Binder.apply( this, arguments );
+            Binder.Appender.apply( this, arguments );
         }
     });
 
-    define('AppTreeItem', Binder.Appender, {
-
-    });
-
-    define('AppTreeLeaf', Binder.Appender, {
+    define('AppTreeItem', Binder, {
         constructor: function () {
             this.isContext = true;
-            Binder.apply( this, arguments );
+            Binder.Appender.apply( this, arguments );
+        }
+    });
+
+    define('AppTreeBranch', AppTree, {
+        template: function ( name ) {
+            return this.context.context.template( name );
         }
     });
 
