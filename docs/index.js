@@ -2,6 +2,11 @@
     /* jshint laxcomma: true */
     "use strict";
 
+    // Array.isArray doesn't work well in IE 8
+    function isArray( obj ) {
+        return Array.isArray( obj ) || obj instanceof Array;
+    }
+
     var define = Binder.define
       , on     = Binder.on
       ;
@@ -19,7 +24,7 @@
             Binder.apply( this, arguments );
         }
       , update: function ( val ) {
-            if ( Array.isArray( val ) )
+            if ( isArray( val ) )
                 return this.Container.update( val );
 
             return Binder.prototype.update.call( this, val );

@@ -82,7 +82,7 @@
 
     function parseComments( elem ) {
         var obj = {}
-          , comments = slice.call( elem.childNodes ).filter( filterComments );
+          , comments = filter.call( elem.childNodes, filterComments );
 
         if ( comments.length > 0 ) {
             var comment = comments.shift();
@@ -103,7 +103,9 @@
     }
 
     // Check if a given object has a given key
-    function has( obj, key ) { return hasOwnProperty.call( obj, key ); }
+    function has( obj, key ) { 
+        return Object.prototype.hasOwnProperty.call( obj, key ); 
+    }
 
     // Inflate a value as Binder arguments object
     function inflateVal( val ) {
@@ -423,7 +425,7 @@
 
             // Merge arg with attr configuration
             arg = merge( 
-                    { class: Binder.defaultClass } 
+                    { 'class': Binder.defaultClass } 
                   , inflateVal( elem.getAttribute( Binder.defaultAttr ) ) 
                   , parseComments( elem )
                   , arg

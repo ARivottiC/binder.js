@@ -1,3 +1,7 @@
+3.1.3
+    * fixed hasOwnProperty call
+    * some fixes for IE8
+
 3.1.2
     * using classList for class atributte manipulation
     * template method now returns a clone
