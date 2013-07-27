@@ -1,3 +1,7 @@
+3.1.4
+    * parentNode is not undefined in unattached elements in IE8
+    * example now full working in IE8
+
 3.1.3
     * fixed hasOwnProperty call
     * some fixes for IE8

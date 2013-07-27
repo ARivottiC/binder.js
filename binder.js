@@ -190,7 +190,7 @@
           ;
 
         // add element to the dom if the element has no parent
-        if ( ! childElem.parentNode )
+        if ( !( childElem.parentNode && childElem.parentElement ) )
             if ( isAppender )
                 parentElem.appendChild( childElem );
             else
@@ -635,7 +635,7 @@
         } 
     }
     , Binder.prototype.constructor = Binder
-    , Binder.VERSION = '3.1.2'
+    , Binder.VERSION = '3.1.4'
 
     /*
      * Static object functions
