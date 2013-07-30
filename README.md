@@ -21,18 +21,19 @@ Requires
 
 **binder.js** was made for modern browsers. That said, if you want to use it older browsers, you must make sure to support the following: 
 
-* **`Array`.`prototype`.`forEach`**
-* **`Array`.`prototype`.`filter`**
-* **`Array`.`prototype`.`indexOf`**
-* **`Array`.`prototype`.`map`**
-* **`Array`.`prototype`.`slice`**
-* **`Element`.`prototype`.`classList`**
+* `Array`.`isArray`
+* `Array`.`prototype`.`forEach`
+* `Array`.`prototype`.`filter`
+* `Array`.`prototype`.`indexOf`
+* `Array`.`prototype`.`map`
+* `Array`.`prototype`.`slice`
+* `Element`.`prototype`.`classList`
 
 The following are only required if using the corresponding functionality:
 
-* **`JSON`.`parse`** for [HTML comments](#html-comments)
-* **`Window`.`prototype`.`addEventListener`** for [on](#on)
-* **`Window`.`prototype`.`removeEventListener`** for [of](#off) (eventually)
+* `JSON`.`parse` for [HTML comments](#html-comments)
+* `Window`.`prototype`.`addEventListener` for [on](#on)
+* `Window`.`prototype`.`removeEventListener` for [no](#no) (eventually)
 
 Thera are allready several Polyfills that cover the above. If you never used polyfills, or don't know where to start, consider [Jonatan Neal's polyfill](https://github.com/jonathantneal/polyfill).
 
@@ -44,7 +45,8 @@ You must set the following **CSS** in order to use **binder.js**:
 .selected { font-weight: bold }
 .hidden, [data-binder-tmpl] {
     display: none !important;
-    visibility: hidden; }
+    visibility: hidden; 
+}
 ```
 
 Usage

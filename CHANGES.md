@@ -1,3 +1,6 @@
+3.1.5
+    * minor code/documentation improvements
+
 3.1.4
     * parentNode is not undefined in unattached elements in IE8
     * example now full working in IE8

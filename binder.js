@@ -77,7 +77,7 @@
     }
 
     function filterComments( node ) { 
-        return node.nodeType == 8 && node.nodeValue.match( rBinder ); 
+        return isComment( node ) && node.nodeValue.match( rBinder ); 
     }
 
     function parseComments( elem ) {
@@ -90,7 +90,7 @@
                 obj = JSON.parse( comment.nodeValue.replace( rBinder, '' ) );
                 elem.removeChild( comment );
             } catch(e) {
-                // TODO: catch error
+                throw e;
             }
         }
         
@@ -129,6 +129,9 @@
 
     // Check if one object is an instance of another
     function isA( obj1, obj2 ) { return obj1 instanceof obj2; }
+
+    // Check if a given node is a comment
+    function isComment( node ) { return node.nodeType === 8; }
 
     // Check if a given value is a function
     function isFn( val ) { return typeof val === 'function'; }
@@ -190,6 +193,8 @@
           ;
 
         // add element to the dom if the element has no parent
+        //  in IE8 an unattached element as a "Document Fragment"? as 
+        //  parentNode
         if ( !( childElem.parentNode && childElem.parentElement ) )
             if ( isAppender )
                 parentElem.appendChild( childElem );
@@ -199,11 +204,12 @@
         attach( obj, child, index );
     }
 
-    // search children elements, width binder attribute set, and attach
+    // search children elements, with binder attribute set, and attach
     function attachChildren( obj, elem ) {
         each.call( elem.children, function ( child ) {
-             // TODO: check if is an elemet. IE up to 8 considers comments as children... :S
-
+            // IE8 wrongly considers comment nodes as children
+            if ( isComment( child ) )
+                return ;
             if ( ! isNull( child.getAttribute( Binder.defaultAttr ) ) )
                 obj.attach( child );
             else
@@ -211,7 +217,7 @@
         }); 
     }
 
-    // associate a template to a object
+    // associate a template to an object
     function attachTemplate( obj, elem, arg ) {
         var guid     = obj.guid
           , tmplAttr = Binder.defaultAttr + '-tmpl'
@@ -417,11 +423,10 @@
         attach  : function ( elem, arg ) {
             var obj = this;
 
-            // TODO: the idea is to check if elem is a string or number,
-            //  check for a better way
-            if ( ! elem.nodeType ) {
-                elem = this.template( elem ); // TODO: re-evaluate template
-            }
+            // if element is not a node, it is a string or number. Get the 
+            //  corresponding template
+            if ( ! elem.nodeType )
+                elem = this.template( elem );
 
             // Merge arg with attr configuration
             arg = merge( 
@@ -566,7 +571,8 @@
       , swap  : function ( sibling ) {
             var parent = this.parent;
 
-            // TODO: check parent
+            if ( ! parent )
+                return ;
 
             var index1 = indexOf.call( parent, this )
               , index2 = indexOf.call( parent, sibling )
@@ -591,7 +597,7 @@
 
             return [ index1, index2 ];
         }
-      , template: function ( name ) { // TODO: not sure yet:::
+      , template: function ( name ) {
             return oTemplate[ this.guid ][ name ].cloneNode( true );
         }
       , toString: function () { return '[object Binder]'; }
@@ -635,7 +641,7 @@
         } 
     }
     , Binder.prototype.constructor = Binder
-    , Binder.VERSION = '3.1.4'
+    , Binder.VERSION = '3.1.5'
 
     /*
      * Static object functions
