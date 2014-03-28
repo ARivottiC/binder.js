@@ -1,3 +1,6 @@
+3.1.6
+    * added pathToObj function and some code refactoring
+
 3.1.5
     * minor code/documentation improvements
 
