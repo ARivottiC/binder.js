@@ -13,6 +13,7 @@
       , map        = arrayProto.map
       , pop        = arrayProto.pop
       , push       = arrayProto.push
+      , reduce     = arrayProto.reduce
       , shift      = arrayProto.shift
       , slice      = arrayProto.slice
       , splice     = arrayProto.splice
@@ -158,6 +159,24 @@
         return merged;
     }
 
+    // In a given object, for each key given, create a nested path.
+    //  If the key is not a String, define as value and finish
+    function pathToObj( /* key1, key2, ..., value*/ ) {
+        return reduce.call( arguments, function( val, key, i, obj ) {
+            var nextI = i + 1;
+
+            if ( isObj( key ) ) {
+                splice.call( obj, nextI );
+                return val;
+            }
+
+            if ( isUndef( val[ key ] ) )
+                val[ key ] = isObj( obj[ nextI ] ) ? obj[ nextI ] : {};
+
+            return val[ key ];
+        }, shift.call( arguments ) );
+    }
+
     /*
      * Object functions
      */
@@ -226,7 +245,7 @@
         if ( isNull( tmplName ) ) 
             return ;
 
-        var templates =  oTemplate[ guid ] || ( oTemplate[ guid ] = [] );
+        var templates = pathToObj( oTemplate, guid, [] );
 
         if ( tmplName )
             templates[ tmplName ] = elem;
@@ -274,21 +293,15 @@
         // add a unique id to the function to be easyly indexed 
         fn.guid = fn.guid || guid++;
 
-        // get listeners for this object ( set if first time )
-        var oL = oListener[ obj.guid ] || ( oListener[ obj.guid ] = {} );
-
-        // get listeners for this object + event ( set if first time )
-        var eL = oL[ event ] || ( oL[ event ] = {} );
-
-        // get the listener for this object + event + function ( set if first time )
-        var listener = eL[ fn.guid ] || ( 
-            eL[ fn.guid ] = function ( event ) {
-                var result = fn.call( obj, event );
-                if ( result === false ) {
-                    event.preventDefault();
-                    event.stopPropagation();
+        // get the listener for this object ( set if not defined )
+        var listener = pathToObj( 
+            oListener, obj.guid, event, fn.guid, function ( e ) {
+                var r = fn.call( obj, e );
+                if ( r === false ) {
+                    e.preventDefault();
+                    e.stopPropagation();
                 }
-                return result;
+                return r;
             } 
         );
 
@@ -391,9 +404,7 @@
         // Group
         var c = args.group || obj.group;
         if ( c ) {
-            obj.group = ( 
-                oGroup[ c ] || ( oGroup[ c ] = new BinderCollection() ) 
-            );
+            obj.group = pathToObj( oGroup, c, new BinderCollection() )
             obj.group.push( obj );
         }
 
@@ -598,7 +609,7 @@
             return [ index1, index2 ];
         }
       , template: function ( name ) {
-            return oTemplate[ this.guid ][ name ].cloneNode( true );
+            return pathToObj( oTemplate, this.guid, name ).cloneNode( true );
         }
       , toString: function () { return '[object Binder]'; }
       , update  : function ( val ) {
@@ -641,7 +652,7 @@
         } 
     }
     , Binder.prototype.constructor = Binder
-    , Binder.VERSION = '3.1.5'
+    , Binder.VERSION = '3.1.6'
 
     /*
      * Static object functions
