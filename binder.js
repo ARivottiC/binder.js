@@ -19,14 +19,14 @@
       , splice     = arrayProto.splice
 
         /*
-         *  Internal objects, variables 
+         *  Internal objects, variables
          */
       , oGroup    = {}
       , oTemplate = {}
       , oListener = {}
       , guid      = 1
 
-        /* 
+        /*
          * Regular Expressions
          */
       , rComa      = /\s*,\s*/
@@ -54,7 +54,7 @@
             new Function(
                 "c",
                 'return function '
-                    + name 
+                    + name
                     + '(e,p,a) { c.call(this,e,p,a) }'
             )
         )( override.constructor === Object ? ExtClass : override.constructor );
@@ -77,8 +77,8 @@
         return ( Binder[ name ] = Class );
     }
 
-    function filterComments( node ) { 
-        return isComment( node ) && node.nodeValue.match( rBinder ); 
+    function filterComments( node ) {
+        return isComment( node ) && node.nodeValue.match( rBinder );
     }
 
     function parseComments( elem ) {
@@ -94,7 +94,7 @@
                 throw e;
             }
         }
-        
+
         return obj;
     }
 
@@ -104,8 +104,8 @@
     }
 
     // Check if a given object has a given key
-    function has( obj, key ) { 
-        return Object.prototype.hasOwnProperty.call( obj, key ); 
+    function has( obj, key ) {
+        return Object.prototype.hasOwnProperty.call( obj, key );
     }
 
     // Inflate a value as Binder arguments object
@@ -117,7 +117,7 @@
                 var values = value.split( rDColumn );
                 obj[ values.shift() ] = values.shift();
             });
-        } 
+        }
         // Is a Class
         else if ( Binder[ val ] )
             obj['class'] = val;
@@ -143,7 +143,7 @@
     // Check if a given value is an object
     function isObj( val ) { return val === Object( val ); }
 
-    // Check if a given value is undefined 
+    // Check if a given value is undefined
     function isUndef( val ) { return val === void 0; }
 
     // Merge 2 or more given objects
@@ -151,7 +151,7 @@
         var merged = shift.call( arguments ) || {};
 
         each.call( arguments, function ( obj ) {
-            if ( obj ) 
+            if ( obj )
                 for ( var key in obj )
                     merged[ key ] = obj[ key ];
         });
@@ -187,8 +187,8 @@
         return obj;
     }
 
-    // push a child to an Array like object 
-    //  if an index is given, splice it to that position 
+    // push a child to an Array like object
+    //  if an index is given, splice it to that position
     function attach( obj, child, index ) {
         if ( isUndef( index ) )
             return push.call( obj, child );
@@ -203,16 +203,16 @@
     //  if an index is given, attach it to that parent's position
     function attachChild( obj, child, index ) {
         /* jshint laxbreak: true */
-        var isAppender = ! obj.length      // empty, push allways work 
-                      || isUndef( index )  // index is not defined 
+        var isAppender = ! obj.length      // empty, push allways work
+                      || isUndef( index )  // index is not defined
                       || ! obj[ index ]    // or doesn'ts have that child
-                      || index !== 0       // or index not 0 
+                      || index !== 0       // or index not 0
           , childElem  = child.elem
           , parentElem = obj.elem
           ;
 
         // add element to the dom if the element has no parent
-        //  in IE8 an unattached element as a "Document Fragment"? as 
+        //  in IE8 an unattached element as a "Document Fragment"? as
         //  parentNode
         if ( !( childElem.parentNode && childElem.parentElement ) )
             if ( isAppender )
@@ -233,7 +233,7 @@
                 obj.attach( child );
             else
                 attachChildren( obj, child );
-        }); 
+        });
     }
 
     // associate a template to an object
@@ -242,7 +242,7 @@
           , tmplAttr = Binder.defaultAttr + '-tmpl'
           , tmplName = elem.getAttribute( tmplAttr );
 
-        if ( isNull( tmplName ) ) 
+        if ( isNull( tmplName ) )
             return ;
 
         var templates = pathToObj( oTemplate, guid, [] );
@@ -261,7 +261,7 @@
     // dettach a child from an Array like object
     function dettach( obj, elem ) {
         if ( isUndef( elem ) )
-            return pop.call( obj ); 
+            return pop.call( obj );
 
         var index = indexOf.call( obj, elem );
         if ( ! isUndef( index ) )
@@ -278,9 +278,9 @@
 
     //
     function no( obj, event, fn ) {
-        // TODO: check/remove listeners 
+        // TODO: check/remove listeners
         var elem = obj.elem;
-        return elem.removeEventListener.apply( elem, arguments ); 
+        return elem.removeEventListener.apply( elem, arguments );
     }
 
     //
@@ -290,11 +290,11 @@
         // no function given, assume object's method with event name
         fn = fn || obj[ event ];
 
-        // add a unique id to the function to be easyly indexed 
+        // add a unique id to the function to be easyly indexed
         fn.guid = fn.guid || guid++;
 
         // get the listener for this object ( set if not defined )
-        var listener = pathToObj( 
+        var listener = pathToObj(
             oListener, obj.guid, event, fn.guid, function ( e ) {
                 var r = fn.call( obj, e );
                 if ( r === false ) {
@@ -302,10 +302,10 @@
                     e.stopPropagation();
                 }
                 return r;
-            } 
+            }
         );
 
-        return obj.elem.addEventListener( event, listener, capture ); 
+        return obj.elem.addEventListener( event, listener, capture );
     }
 
     // remove object's element class
@@ -329,7 +329,7 @@
 
     // make the first position of a string uppercase
     function ucFirst( obj ) {
-        return obj.replace( 
+        return obj.replace(
                 /^[a-z]/, function ( val ) { return val.toUpperCase(); }
             );
     }
@@ -337,7 +337,7 @@
     /*
      * BinderCollection
      *  Array object intended to store a collection of Binder objects with
-     *  methods that affects all children 
+     *  methods that affects all children
      */
     function BinderCollection() { push.apply( this, arguments ); }
 
@@ -352,8 +352,8 @@
         // execute a given method in all children
         exec: function ( fn ) {
             var args = splice.call( arguments, 1 );
-            this.forEach( function ( child ) { 
-                child[ fn ].apply( child, args ); 
+            this.forEach( function ( child ) {
+                child[ fn ].apply( child, args );
             });
             return this;
         }
@@ -389,8 +389,8 @@
 
     binderColProto.constructor = BinderCollection;
 
-    /* 
-     * Binder 
+    /*
+     * Binder
      */
     function Binder( elem, parent, args ) {
         args = args || {};
@@ -404,45 +404,45 @@
         // Group
         var c = args.group || obj.group;
         if ( c ) {
-            obj.group = pathToObj( oGroup, c, new BinderCollection() )
+            obj.group = pathToObj( oGroup, c, new BinderCollection() );
             obj.group.push( obj );
         }
 
-        // Get the object name (for path relation) and fix the name 
+        // Get the object name (for path relation) and fix the name
         //  if needed
         var name = args.name || getIdOrName( elem );
         if ( name )
             obj.name = name;
 
-        setIsProp( obj, args.type ); 
-        
+        setIsProp( obj, args.type );
+
         if ( isObj( parent ) ) {
             obj.root    = parent.root || parent;
             obj.context = parent.isContext ? parent : parent.context;
-            obj.parent  = parent; 
+            obj.parent  = parent;
         }
         else
             obj.root = obj.context = obj; // TODO: is this really needed???
 
-        attachChildren( obj, elem ); 
+        attachChildren( obj, elem );
 
-        return obj;       
+        return obj;
     }
 
     Binder.prototype = {
-        // attach a child to the object 
+        // attach a child to the object
         attach  : function ( elem, arg ) {
             var obj = this;
 
-            // if element is not a node, it is a string or number. Get the 
+            // if element is not a node, it is a string or number. Get the
             //  corresponding template
             if ( ! elem.nodeType )
                 elem = this.template( elem );
 
             // Merge arg with attr configuration
-            arg = merge( 
-                    { 'class': Binder.defaultClass } 
-                  , inflateVal( elem.getAttribute( Binder.defaultAttr ) ) 
+            arg = merge(
+                    { 'class': Binder.defaultClass }
+                  , inflateVal( elem.getAttribute( Binder.defaultAttr ) )
                   , parseComments( elem )
                   , arg
                 );
@@ -473,7 +473,7 @@
             return child;
         }
 
-        // returns a BinderCollection of this object's children 
+        // returns a BinderCollection of this object's children
         //  if an object is given and is a child, returns that child
         //  if a name or number is given, and the child exists, returns if
         //  if a function is givem. use that function as a filter
@@ -495,7 +495,7 @@
                     break;
                 default:
                     var array = binderColProto.slice.call( obj );
- 
+
                     if ( isFn( val ) )
                         return array.filter( val );
 
@@ -559,7 +559,7 @@
             // TODO: maybe return a BinderCollection?
             if ( parent ) {
                 var index = indexOf.call( parent, this );
-                if ( index < parent.length - 1 ) 
+                if ( index < parent.length - 1 )
                     return parent[ index + 1 ];
             }
 
@@ -571,7 +571,7 @@
             // TODO: maybe return a BinderCollection?
             if ( parent ) {
                 var index = indexOf.call( parent, this );
-                if ( index > 0 ) 
+                if ( index > 0 )
                     return parent[ index - 1 ];
             }
 
@@ -592,8 +592,8 @@
             if ( index2 < 0 )
                 return false; // TODO: maybe not the best solution...
 
-            parent[ index1 ] = splice.call( 
-                    parent, index2, 1, parent[ index1 ] 
+            parent[ index1 ] = splice.call(
+                    parent, index2, 1, parent[ index1 ]
                 ).pop();
 
             var a = this.elem;
@@ -620,7 +620,7 @@
                     var value = val[ key ];
                     var child = obj[ key ];
 
-                    if ( isFn( child ) ) 
+                    if ( isFn( child ) )
                         child.call( obj, value );
                     else if ( has( obj, key ) )
                         if ( isA( child, Binder ) )
@@ -649,7 +649,7 @@
 
             /* jshint boss: true */
             return ( elem.innerHTML = val );
-        } 
+        }
     }
     , Binder.prototype.constructor = Binder
     , Binder.VERSION = '3.1.6'
@@ -662,7 +662,7 @@
     , Binder.on     = on
 
     /*
-     * Attributes intended to be override 
+     * Attributes intended to be override
      */
       // default attribute name
     , Binder.defaultAttr = 'data-binder'

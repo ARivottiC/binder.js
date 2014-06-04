@@ -1,4 +1,4 @@
-<!doctype html> 
+<!doctype html>
 <html lang="pt">
 <head>
     <meta charset="utf-8">
@@ -15,19 +15,19 @@
         <h2>List</h2>
         <div data-binder="name: List, class: AppController">
             <form data-binder="AppForm">
-                <input type="text" name="Text" data-binder="Input"> 
+                <input type="text" name="Text" data-binder="ElemInput">
                 <input type="submit" value="Add Item">
                 <span data-binder="class: AppError, delay: 1500" class="hidden">Must suplly a value!</span>
             </form>
             <ul data-binder="name: Container, class: Appender, type: context">
                 <li data-binder="AppItem" data-binder-tmpl>
                     <form data-binder="class: AppForm, name: Form" class="hidden">
-                        <input type="text" name="Text" data-binder="Input"> 
+                        <input type="text" name="Text" data-binder="ElemInput">
                         <input type="submit" value="Update Item">
                         <span data-binder="class: AppError, delay: 1000" class="hidden">Must suplly a value!</span>
                     </form>
                     <span data-binder="View">
-                        <span data-binder="Value"></span> 
+                        <span data-binder="Value"></span>
                         <button data-binder="AppEdit">Edit</button>
                         <button data-binder="AppDel">Remove</button>
                         <button data-binder="AppSel">Select</button>
@@ -43,7 +43,7 @@
         <h2>Table</h2>
         <div data-binder="name: Table, class: AppController">
             <form data-binder="AppForm">
-                <input type="text" name="Text" data-binder="Input"> 
+                <input type="text" name="Text" data-binder="ElemInput">
                 <input type="submit" value="Add Item">
                 <span data-binder="class: AppError, delay: 1500" class="hidden">Must suplly a value!</span>
             </form>
@@ -58,13 +58,13 @@
                     <tr data-binder="AppItem" data-binder-tmpl>
                         <td>
                             <form data-binder="class: AppForm, name: Form" class="hidden">
-                                <input type="text" name="Text" data-binder="Input"> 
+                                <input type="text" name="Text" data-binder="ElemInput">
                                 <input type="submit" value="Update Item">
                                 <span data-binder="class: AppError, delay: 1000" class="hidden">Must suplly a value!</span>
                             </form>
                             <span data-binder="View">
                                 <button data-binder="AppEdit">Edit</button>
-                                <span data-binder="Value"></span> 
+                                <span data-binder="Value"></span>
                             </span>
                         </td>
                         <td>
@@ -91,10 +91,12 @@
 
     <!--[if lt IE 10]><script src="http://polyfill.io"></script><![endif]-->
     <script src="../binder.js"></script>
-    <script src="../binderx.js"></script>
+    <script src="../binderx.appender.js"></script>
+    <script src="../binderx.updater.js"></script>
+    <script src="../binderx.elem-input.js"></script>
     <script src="index.js"></script>
 
-    <script type="text/javascript">        
+    <script type="text/javascript">
         app = new Binder( document.body );
     </script>
 </body>

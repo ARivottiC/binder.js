@@ -2,11 +2,6 @@
     /* jshint laxcomma: true */
     "use strict";
 
-    // Array.isArray doesn't work well in IE 8
-    function isArray( obj ) {
-        return Array.isArray( obj ) || obj instanceof Array;
-    }
-
     var define = Binder.define
       , on     = Binder.on
       ;
@@ -24,7 +19,7 @@
             Binder.apply( this, arguments );
         }
       , update: function ( val ) {
-            if ( isArray( val ) )
+            if ( Array.isArray( val ) )
                 return this.Container.update( val );
 
             return Binder.prototype.update.call( this, val );
@@ -37,8 +32,8 @@
             this.group     = 'items';
             Binder.apply( this, arguments );
         }
-      , update: function ( val ) { 
-            this.Value.value( val ); 
+      , update: function ( val ) {
+            this.Value.value( val );
             this.Form.hide();
             this.View.show();
 
@@ -62,7 +57,7 @@
                 text.value( null );
             } else
                 this.Error.show();
-            
+
             return false;
         }
     });
@@ -83,8 +78,8 @@
             Binder.prototype.show.call( obj );
             clearTimeout( obj.timeout );
 
-            obj.timeout = setTimeout( 
-                function () { obj.hide(); }, obj.delay 
+            obj.timeout = setTimeout(
+                function () { obj.hide(); }, obj.delay
             );
 
             return obj;
@@ -92,7 +87,7 @@
     });
 
     define('AppEdit', AppButton, {
-        click: function () { 
+        click: function () {
             var context = this.context;
             context.View.hide();
             context.Form.update({ Text: context.Value.value() } ).show();
@@ -101,7 +96,7 @@
     });
 
     define('AppDel', AppButton, {
-        click: function () { 
+        click: function () {
             var item = this.context;
             item.context.dettach( item );
             return false;
