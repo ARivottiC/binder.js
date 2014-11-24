@@ -1,3 +1,7 @@
+<span style="color: red; font-size: xx-large">
+DEPRECATED!!!! See [doo.js](https://github.com/ARivottiC/doo.js)! 
+</span>
+
 binder.js
 ====================
 
