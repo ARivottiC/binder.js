@@ -1,6 +1,6 @@
-<span style="color: red; font-size: xx-large">
+<b>
 DEPRECATED!!!! See [doo.js](https://github.com/ARivottiC/doo.js)! 
-</span>
+</b>
 
 binder.js
 ====================
